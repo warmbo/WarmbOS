@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Welcome to WarmbOS</title>
+  <link rel="stylesheet" href="../../static/styles.css">
+  <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        /* height and overflow are already in base */
+      }
+
+      h1 {
+        font-size: 3rem;
+        margin-bottom: 0.5rem;
+        color: #e0e0ff;
+      }
+
+      p {
+        font-size: 1.2rem;
+        max-width: 600px;
+        margin-bottom: 2rem;
+        color: #cccccc;
+      }
+
+      .button {
+        background-color: #111;
+        color: white;
+        border: 1px solid #444;
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-size: .875rem;
+        cursor: pointer;
+        transition: background 0.3s ease;
+      }
+
+      .button:hover {
+        background-color: #333;
+      }
+
+      .logo {
+        font-size: 5rem;
+        color: #a3e635;
+        animation: float 2s ease-in-out infinite alternate;
+      }
+
+      .logo img {
+        margin-top: 20px;
+        width: 180px;
+        height: 180px;
+        filter: drop-shadow(0px 5px 25px rgba(122, 142, 168, 0.5));
+      }
+
+      .welcome-info {
+        font-size: 10px;
+        color: #555;
+        text-shadow: 0px 1px 0px rgba(200,200,200,.1);
+        margin-top: 55px;
+      }
+
+      @keyframes float {
+        from { transform: translateY(5px); }
+        to   { transform: translateY(-10px); }
+      }
+  </style>
+</head>
+<body>
+  <div class="logo"><img src="../../static/images/warmbos.png"></div>
+  <h1>Welcome to WarmbOS</h1>
+  <p>Your cozy, customizable, browser-based desktop environment. <br>
+     Open apps. Move windows. Have fun. All in your browser.</p>
+  <button class="button" onclick="window.parent.location.reload()">🔗 Learn More</button>
+  
+  <p class="welcome-info">WarmbOS v0.1 - 05.2025</p>
+</body>
+</html>

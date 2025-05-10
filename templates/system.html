@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>System Dashboard</title>
+  <link rel="stylesheet" href="../../static/styles.css">
+  <style>
+    body {
+      margin: 10px 20px;
+      background-color: #0f0f0f;
+      height: auto;
+      overflow: auto;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      margin-bottom: 10px;
+      color: #ffffff;
+      font-size: 1.2em;
+    }
+
+    .bar-container {
+      width: 100%;
+      height: 20px;
+      background-color: #1a1a1a;
+      margin-top: 6px;
+      margin-bottom: 2px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: 0px 1px 5px -2px rgba(200,200,200,.6);
+    }
+
+    .bar {
+      height: 100%;
+      text-align: center;
+      line-height: 14px; /* Vertically center text in bar */
+      color: white;
+      font-size: 0.8em;
+      font-weight: bold;
+      transition: width 0.3s ease, background-color 0.5s ease;
+      display: flex;
+      padding: 4px;
+      text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.9);
+      white-space: nowrap; /* Prevent text from wrapping */
+      overflow: visible; /* Allow text to overflow the bar */
+    }
+
+
+        /* Gradient background for each bar type */
+        .cpu {
+          background: linear-gradient(45deg, #3f9fff, #00d2ff);
+        }
+
+        .memory {
+          background: linear-gradient(45deg, #9f3fff, #6a00ff);
+        }
+
+        .disk {
+          background: linear-gradient(45deg, #3fff9f, #00e67d);
+        }
+
+        .read {
+          background: linear-gradient(45deg, #ffcf3f, #ff7e00);
+        }
+
+        .write {
+          background: linear-gradient(45deg, #ff6f3f, #ff2e00);
+        }
+
+        .rx {
+          background: linear-gradient(45deg, #3fcfff, #00b7ff);
+        }
+
+        .tx {
+          background: linear-gradient(45deg, #cf3fff, #d500ff);
+        }
+  </style>
+</head>
+<body>
+  <div class="section">
+    <h2>CPU Usage</h2>
+    <div class="bar-container">
+      <div id="cpuBar" class="bar cpu">0%</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Memory Usage</h2>
+    <div class="bar-container">
+      <div id="memoryBar" class="bar memory">0 MB</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Disk Usage</h2>
+    <div class="bar-container">
+      <div id="diskBar" class="bar disk">0 GB</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>I/O Rates</h2>
+    <div class="bar-container">
+      <div id="ioReadBar" class="bar read">0 MB/s</div>
+    </div>
+    <div class="bar-container">
+      <div id="ioWriteBar" class="bar write">0 MB/s</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Network Transfer</h2>
+    <div class="bar-container">
+      <div id="netRxBar" class="bar rx">0 MB/s</div>
+    </div>
+    <div class="bar-container">
+      <div id="netTxBar" class="bar tx">0 MB/s</div>
+    </div>
+  </div>
+
+  <script>
+    async function updateBars() {
+      const res = await fetch('{{ URL_PREFIX }}/api/system');
+      const data = await res.json();
+
+      // CPU Bar
+      const cpuPercent = data.cpu.percent;
+      const cpuBar = document.getElementById('cpuBar');
+      cpuBar.style.width = cpuPercent + '%';
+      cpuBar.textContent = cpuPercent + '%';
+
+      // Memory Bar
+      const memoryUsed = (data.memory.used / 1024 / 1024).toFixed(2); // MB
+      const memoryTotal = (data.memory.total / 1024 / 1024).toFixed(2); // MB
+      const memoryBar = document.getElementById('memoryBar');
+      memoryBar.style.width = (memoryUsed / memoryTotal) * 100 + '%';
+      memoryBar.textContent = memoryUsed + ' MB / ' + memoryTotal + ' MB';
+
+      // Disk Bar
+      const diskUsed = (data.disk.used / 1024 / 1024 / 1024).toFixed(2); // GB
+      const diskTotal = (data.disk.total / 1024 / 1024 / 1024).toFixed(2); // GB
+      const diskBar = document.getElementById('diskBar');
+      diskBar.style.width = (diskUsed / diskTotal) * 100 + '%';
+      diskBar.textContent = diskUsed + ' GB / ' + diskTotal + ' GB';
+
+      // I/O Read/Write Bars
+      const ioReadRate = data.disk_io.read_rate_mb;
+      const ioWriteRate = data.disk_io.write_rate_mb;
+      const ioReadBar = document.getElementById('ioReadBar');
+      const ioWriteBar = document.getElementById('ioWriteBar');
+      ioReadBar.style.width = ioReadRate + '%';
+      ioReadBar.textContent = ioReadRate + ' MB/s';
+      ioWriteBar.style.width = ioWriteRate + '%';
+      ioWriteBar.textContent = ioWriteRate + ' MB/s';
+
+      // Network Rx/Tx Bars
+      const netRxRate = data.network.rx_rate_mb;
+      const netTxRate = data.network.tx_rate_mb;
+      const netRxBar = document.getElementById('netRxBar');
+      const netTxBar = document.getElementById('netTxBar');
+      netRxBar.style.width = netRxRate + '%';
+      netRxBar.textContent = netRxRate + ' MB/s';
+      netTxBar.style.width = netTxRate + '%';
+      netTxBar.textContent = netTxRate + ' MB/s';
+    }
+
+    setInterval(updateBars, 3000);
+    updateBars();
+  </script>
+</body>
+</html>

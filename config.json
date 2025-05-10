@@ -1,0 +1,39 @@
+{
+  "taskbar": [],
+  "main_menu": [
+    {
+      "heading": "Servers"
+    },
+    {
+      "title": "pve-geminar",
+      "url": "https://10.0.0.99:8006/",
+      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox-light.svg",
+      "width": "1280px",
+      "height": "768px"
+    },
+    {
+      "heading": "Network"
+    }
+  ],
+  "taskbar_unique": [
+    {
+      "title": "Edit",
+      "url": "/templates/pages/editor.html",
+      "icon": "/static/images/ui/edit.png",
+      "width": "380px",
+      "height": "710px"
+    },
+    {
+      "title": "System",
+      "url": "/templates/pages/system.html",
+      "icon": "/static/images/ui/system.png",
+      "width": "300px",
+      "height": "540px"
+    },
+    {
+      "title": "About",
+      "url": "/templates/pages/about.html",
+      "icon": "/static/images/ui/about.png"
+    }
+  ]
+}
