@@ -14,13 +14,13 @@ A browser-based desktop-like environment for viewing local services and servers 
 <img src="https://i.imgur.com/RbnhyDG.png" alt="WarmbOS Configuration Editor">
 </div>
 
-## Features
+## Features (some WIP)
 * **Customizable Taskbar and Main Menu:**  Easily add, remove, and rearrange applications and services in the taskbar and main menu via a built-in editor.  Persistent configuration is stored locally.
 * **Multi-Window Support:** Open and manage multiple windows simultaneously, each with customizable size and position.  Window state is preserved across sessions.
-* **System Monitoring:** View real-time CPU usage, memory usage, disk I/O, and network activity.
-* **Built-in Applications:** Includes a simple calendar application.
+* **System Monitoring:** View nearly real-time CPU usage, memory usage, disk I/O, and network activity.
+* **Built-in Applications:** Includes a simple calendar application with more planned to come soon.
 * **External Application Support:** Launch and interact with external applications and web services through URLs.
-* **Configurable Appearance:** Customize the appearance with custom background images (not yet implemented in the provided code).
+* **Configurable Appearance:** Customize the appearance with custom background images (not yet implemented).
 
 ## Usage
 1.  **Navigate to WarmbOS:** Access WarmbOS via a web browser at the designated URL (typically `http://<your_server_ip>:5000/os`).
@@ -56,56 +56,6 @@ The application configuration is stored in `config.json`.  This file allows cust
 Each array contains objects describing individual taskbar items, main menu items, and unique taskbar buttons.  These objects include fields such as `title`, `url`, `width`, `height`, and `icon`.
 
 The configuration can be modified through the built-in editor.
-
-## API Documentation
-### `/os/api/config` (GET)
-
-Returns the current application configuration.
-
-**Response:**
-
-```json
-{
-  "taskbar": [],
-  "main_menu": [],
-  "taskbar_unique": []
-}
-```
-
-### `/os/api/save` (POST)
-
-Saves the application configuration.
-
-**Request:**
-
-```json
-{
-  "taskbar": [...],
-  "main_menu": [...],
-  "taskbar_unique": [...]
-}
-```
-
-**Response:**
-
-A 204 No Content response on successful save. Error responses (400 Bad Request, 500 Internal Server Error) are returned if input validation fails or saving encounters an error.
-
-
-### `/os/api/system` (GET)
-
-Returns real-time system information including CPU usage, memory usage, disk I/O, and network statistics.
-
-**Response:**
-
-```json
-{
-    "cpu": {"percent": cpu_percent},
-    "memory": memory,
-    "disk": disk,
-    "disk_io": { ... },
-    "network": { ... }
-}
-```
 
 ## Dependencies
 The project dependencies are listed in `requirements.txt` (This file needs to be created).
