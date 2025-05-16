@@ -5,14 +5,23 @@
       "url": "/static/pages/calendar.html",
       "width": "360px",
       "height": "420px",
-      "icon": "/static/images/apps/system/calendar.svg"
+      "icon": "/static/images/apps/calendar.svg"
     },
     {
       "title": "Homepage",
       "url": "https://warho.me/",
-      "width": "",
-      "height": "",
       "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/homepage.png"
+    },
+    {
+      "title": "VSCode",
+      "url": "http://10.0.0.112:8680/?folder=/opt/warmbos/",
+      "width": "1280px",
+      "height": "768px",
+      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/visual-studio-code.svg"
+    },
+    {
+      "title": "Plex",
+      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/plex.svg"
     }
   ],
   "main_menu": [
@@ -29,8 +38,6 @@
     {
       "title": "pve-jurai",
       "url": "https://10.0.0.98:8006",
-      "width": "",
-      "height": "",
       "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox-light.svg"
     },
     {
@@ -38,10 +45,7 @@
     },
     {
       "title": "OPNsense",
-      "url": "http://10.0.0.1",
-      "width": "",
-      "height": "",
-      "icon": ""
+      "url": "http://10.0.0.1"
     }
   ],
   "taskbar_unique": [
@@ -62,8 +66,6 @@
     {
       "title": "About",
       "url": "/templates/pages/about.html",
-      "width": "",
-      "height": "",
       "icon": "/static/images/ui/about.png"
     }
   ]

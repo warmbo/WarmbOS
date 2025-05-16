@@ -5,147 +5,92 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>WarmbOS Editor</title>
   <link rel="stylesheet" href="../../static/styles.css">
-  <style>
-    body {
-      margin: 20px;
-      background-color: #0f0f0f;
-      height: auto;
-      overflow: auto;
-    }
-    #config-form {
-      padding: 0rem;
-      box-sizing: border-box; /* Include padding in width calculation */
-    }
-    h2 {
-      font-size: 1.1rem;
-      background-color: #1e1e1e;
-      padding: 0.5rem;
-      margin: 0;
-      cursor: pointer;
-    }
-    .section {
-      margin-bottom: 0rem;
-      border-bottom: 1px solid #333;
-      overflow: hidden;
-    }
-    .entries {
-      display: none;
-      padding: 0.5rem;
-      background: #181818;
-    }
-    .entry {
-      margin-bottom: 0.5rem;
-      border: 1px solid #444;
-      padding: 0.5rem;
-      border-radius: 4px;
-      background-color: #222;
-      cursor: move;
-    }
-    .entry.dragging {
-      opacity: 0.5;
-      border: 1px dashed #666;
-    }
-    .entry-placeholder {
-      border: 1px dashed #666;
-      background-color: #222;
-      margin-bottom: 0.5rem;
-      border-radius: 4px;
-      height: 50px;
-    }
-    label {
-      display: block;
-      font-size: 0.85rem;
-      margin-top: 0.3rem;
-    }
-    input, select {
-      width: 97%;
-      padding: 0.55rem;
-      margin-top: 0.3rem;
-      background: #111;
-      color: white;
-      border: 1px solid #333;
-      border-radius: 4px;
-      box-sizing: border-box;
-    }
-    .remove-btn {
-      margin-top: 0.5rem;
-      background: #822;
-      color: white;
-      border: none;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    .add-btn, .save-btn {
-      margin-top: 0.5rem;
-      padding: 0.5rem;
-      background: #2a2a2a;
-      color: white;
-      border: 1px solid #444;
-      cursor: pointer;
-      border-radius: 4px;
-    }
-
-    .save-btn img {
-      height: 12px;
-      width: 12px;
-      vertical-align: middle;
-    }
-  </style>
+  <link rel="stylesheet" href="../../static/editor.css">
+  <script>
+    const URL_PREFIX = "{{ URL_PREFIX }}";
+  </script>
 </head>
 <body>
 
   <form id="config-form">
-    <div class="section" data-type="taskbar">
-      <h2 onclick="toggleSection(this)">Taskbar</h2>
-      <div class="entries" id="taskbar-entries">
-        <button type="button" class="add-btn" onclick="addEntry('taskbar')">+ Add Taskbar Item</button>
+    <div class="container">
+      <div class="section" data-type="taskbar">
+        <h2 onclick="toggleSection(this)">Taskbar</h2>
+        <div class="entries" id="taskbar-entries">
+          <button type="button" class="add-btn" onclick="window.addEntry('taskbar')">+ Add Taskbar Item</button>
+        </div>
+      </div>
+
+      <div class="section" data-type="main_menu">
+        <h2 onclick="toggleSection(this)">Main Menu</h2>
+        <div class="entries" id="main-menu-entries">
+          <button type="button" class="add-btn" onclick="window.addEntry('main_menu')">+ Add Main Menu Item</button>
+          <button type="button" class="add-btn" onclick="window.addHeading('main_menu')">+ Add Heading</button>
+        </div>
+      </div>
+
+      <div class="section" data-type="taskbar_unique">
+        <h2 onclick="toggleSection(this)">System</h2>
+        <div class="entries" id="taskbar-unique-entries">
+          <button type="button" class="add-btn" onclick="window.addEntry('taskbar_unique')">+ Add System Button</button>
+        </div>
       </div>
     </div>
-
-    <div class="section" data-type="main_menu">
-      <h2 onclick="toggleSection(this)">Main Menu</h2>
-      <div class="entries" id="main-menu-entries">
-        <button type="button" class="add-btn" onclick="addEntry('main_menu')">+ Add Main Menu Item</button>
-        <button type="button" class="add-btn" onclick="addHeading('main_menu')">+ Add Heading</button>
-      </div>
-    </div>
-
-    <div class="section" data-type="taskbar_unique">
-      <h2 onclick="toggleSection(this)">Taskbar Unique</h2>
-      <div class="entries" id="taskbar-unique-entries">
-        <button type="button" class="add-btn" onclick="addEntry('taskbar_unique')">+ Add Unique Button</button>
-      </div>
-    </div>
-
-    <button type="submit" class="save-btn"><img src="../../static/images/ui/check.png"> Save</button>
-    
+    <button type="submit" id="save-btn" class="save-btn">
+      <img src="../../static/images/ui/check.png"> Save
+    </button>
   </form>
-
-  <input type="text" id="bg-url" placeholder="https://example.com/image.jpg" style="width: 80%;">
-<button id="set-bg-btn">Set Background</button>
-<button id="reset-bg-btn" style="margin-left: 10px;">Reset to Default</button>
-
 
   <template id="entry-template">
     <div class="entry" draggable="true">
-      <label>Title<input name="title" /></label>
-      <label>URL<input name="url" /></label>
-      <label>Icon<input name="icon" /></label>
-      <label>Width<input name="width" placeholder="e.g. 1280px" /></label>
-      <label>Height<input name="height" placeholder="e.g. 768px" /></label>
-      <button type="button" class="remove-btn" onclick="this.closest('.entry').remove()">Remove</button>
+      <div class="entry-header">
+        <input name="title" placeholder="Title" />
+        <button type="button" class="expand-btn" onclick="toggleEntryDetails(this)">+</button>
+        <button type="button" class="move-btn" onclick="moveEntryUp(event)">⬆</button>
+        <button type="button" class="move-btn" onclick="moveEntryDown(event)">⬇</button>
+        <button type="button" class="remove-btn" onclick="confirmRemoveEntry(event)">X</button>
+      </div>
+      <div class="entry-details" style="display:none;">
+        <label>URL<input name="url" /></label>
+        <label>Width<input name="width" placeholder="e.g. 1280px" /></label>
+        <label>Height<input name="height" placeholder="e.g. 768px" /></label>
+        <label>Icon URL<input name="icon" placeholder="/static/images/apps/icon.png" /></label>
+      </div>
     </div>
   </template>
 
   <template id="heading-template">
     <div class="entry" draggable="true">
-      <label>Heading Text<input name="heading" /></label>
-      <button type="button" class="remove-btn" onclick="this.closest('.entry').remove()">Remove Heading</button>
+      <div class="entry-header">
+        <label style="flex-grow: 1;">Heading Text
+          <input name="heading" />
+        </label>
+        <button type="button" class="expand-btn" onclick="toggleEntryDetails(this)">+</button>
+        <button type="button" class="move-btn move-up" onclick="moveEntry(event, 'up')">⬆</button>
+        <button type="button" class="move-btn move-down" onclick="moveEntry(event, 'down')">⬇</button>
+        <button type="button" class="remove-btn" onclick="confirmRemoveEntry(event)">X</button>
+      </div>
+      <div class="entry-details" style="display:none;">
+        <!-- No extra fields for headings -->
+      </div>
     </div>
   </template>
 
+  <template id="icon-selector-template">
+    <div class="icon-selector">
+      <label>Icon Selection
+        <select name="icon-select" class="icon-select">
+          <option value="">-- Select an icon --</option>
+          <!-- Options will be populated by JavaScript -->
+        </select>
+      </label>
+      <span class="or-text">OR</span>
+      <label>Custom Icon URL<input name="icon-url" placeholder="/os/static/images/apps/icon.png" /></label>
+    </div>
+  </template>
+
+  <script src="../../static/js/selfhst-icons.js"></script>
   <script src="../../static/js/editor.js"></script>
-    
+
 </body>
 </html>

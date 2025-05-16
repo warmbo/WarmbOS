@@ -4,6 +4,7 @@ import json
 import platform
 import socket
 import datetime
+import threading
 import subprocess
 import cpuinfo
 from flask import Flask, jsonify, request, render_template, url_for, redirect
@@ -14,7 +15,6 @@ URL_PREFIX = "/os"
 app = Flask(__name__, static_url_path=f'{URL_PREFIX}/static')
 
 CONFIG_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.json')
-DEFAULT_BG = f"{URL_PREFIX}/static/media/os-bg.png"
 
 @app.after_request
 def add_security_headers(response):
@@ -49,15 +49,12 @@ def system():
 def about():
     return render_template('about.html')
 
-DEFAULT_BG = f"{URL_PREFIX}/static/images/os-bg.png"
-
 @app.route(f'{URL_PREFIX}/api/config', methods=['GET'])
 def get_config():
     default_config = {
         "taskbar": [],
         "main_menu": [],
-        "taskbar_unique": [],
-        "background_image": DEFAULT_BG  # Ensure this is included
+        "taskbar_unique": []
     }
 
     if not os.path.exists(CONFIG_PATH):
@@ -70,13 +67,27 @@ def get_config():
 
 @app.route(f'{URL_PREFIX}/api/save', methods=['POST'])
 def save_config():
-    data = request.json
+    # Check if the data is sent as JSON or form data
+    if request.is_json:
+        data = request.get_json()
+    else:
+        return jsonify({'error': 'Invalid content type. Expected JSON.'}), 400
 
     if not isinstance(data, dict):
         return jsonify({'error': 'Invalid config format'}), 400
 
-    with open(CONFIG_PATH, 'w') as f:
-        json.dump(data, f, indent=2)
+    # Validate and save configuration
+    config_to_save = {
+        "taskbar": data.get("taskbar", []),
+        "main_menu": data.get("main_menu", []),
+        "taskbar_unique": data.get("taskbar_unique", [])
+    }
+
+    try:
+        with open(CONFIG_PATH, 'w') as f:
+            json.dump(config_to_save, f, indent=2)
+    except Exception as e:
+        return jsonify({'error': f'Error saving config: {str(e)}'}), 500
 
     return '', 204
 

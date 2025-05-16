@@ -13,20 +13,18 @@
 
   <div class="taskbar">
     <button id="main-menu-toggle" class="main-menu-button"><img src="{{ URL_PREFIX }}/static/images/warmbos.png" alt="WarmbOS"></button>
-    <div id="taskbar-buttons"></div><button id="clearLocalStorageBtn" class=".taskbar button ">Flush LocalStorage</button>
-    <div class="taskbar-unique" id="taskbar-unique-buttons"></div>
+    <div id="taskbar-buttons"></div>
+    <div class="taskbar-unique" id="taskbar-unique-buttons"></div><button id="clearLocalStorageBtn" class=".taskbar button ">🚽</button>
       
   </div>
 
   <div id="main-menu" class="main-menu"></div>
   
-  <!-- Load modular scripts -->
   <script>
-    // Store URL prefix for use in JavaScript
     const URL_PREFIX = "{{ URL_PREFIX }}";
   </script>
-  <script src="{{ URL_PREFIX }}/static/js/window-manager.js"></script>  
-  <script src="{{ URL_PREFIX }}/static/js/config-loader.js"></script>
-  <script src="{{ URL_PREFIX }}/static/js/script.js"></script>
+  <script type="module" src="{{ URL_PREFIX }}/static/js/config-loader.js"></script>
+  <script type="module" src="{{ URL_PREFIX }}/static/js/window-manager.js"></script>  
+  <script type="module" src="{{ URL_PREFIX }}/static/js/script.js"></script>
 </body>
 </html>
