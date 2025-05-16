@@ -29,10 +29,7 @@ A browser-based desktop-like environment for viewing local services and servers 
 4.  **Manage Windows:** Open and manage windows using the taskbar.
 
 ## Installation
-1.  **Prerequisites:** Ensure you have Python 3 and `pip` installed.
-2.  **Install Dependencies:** Use pip to install required packages:  `pip install -r requirements.txt` (This file needs to be created with project dependencies)
-3.  **Run the Application:** Execute the main application script: `python app.py`.
-4.  **Access WarmbOS:** Open a web browser and navigate to `http://localhost:5000/os` or `http://<your_server_ip>:5000/os` (replace `<your_server_ip>` with your server's IP address).
+1.  Coming Soon
 
 ## Technologies Used
 * **Python:** The backend is written in Python, providing the API and system information.
