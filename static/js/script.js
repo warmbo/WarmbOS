@@ -1,60 +1,64 @@
 /**
- * Main Script
- * Initializes the application and coordinates between modules
+ * Main Script - Initializes the application
  */
-(() => {
-    const windowManager = new WindowManager();
+import WindowUI from '/os/static/js/window-manager.js';
+import ConfigLoader from '/os/static/js/config-loader.js';
+
+// Wrap in async function to allow await
+(async () => {
+    const windowManager = new WindowUI();
     const configLoader = new ConfigLoader(windowManager);
 
-    configLoader.loadConfig();
+    // Initialize system
+    await configLoader.loadConfig();
+    
+    // Restore window state
+    windowManager.restoreWindowState();
 
-    if (Object.keys(windowManager.windowsState).length > 0) {
-        windowManager.restoreWindows();
-    } else {
-        // Open the "About" window, same as button
+    // Open default window if none restored
+    if (Object.keys(windowManager.stateManager.windowsState).length === 0) {
         windowManager.createWindow(
-            '/templates/pages/about.html',
+            '/os/templates/pages/about.html', 
             'About',
-            { icon: '/static/images/ui/about.png' }
+            { 
+                icon: '/static/images/ui/about.png',
+                persistent: true 
+            }  
         );
     }
 
-    // Select the button
+    // Setup localStorage clearing
     const clearLocalStorageBtn = document.getElementById("clearLocalStorageBtn");
-
-    // Add an event listener for the button click
     if (clearLocalStorageBtn) {
-        clearLocalStorageBtn.addEventListener("click", function() {
-            // Clear the localStorage
+        clearLocalStorageBtn.addEventListener("click", () => {
             localStorage.clear();
-            // Refresh the page
             window.location.reload();
         });
     }
 
-    // Background Image Handling
+    // Background image handling
     function updateBackground(imageUrl) {
-    document.body.style.background = `url('${imageUrl}') no-repeat center center fixed`;
-    document.body.style.backgroundSize = 'cover';
+        document.body.style.background = `url('${imageUrl}') no-repeat center center fixed`;
+        document.body.style.backgroundSize = 'cover';
     }
 
-    // Load background on startup
-    (async function initBackground() {
-    try {
-        const response = await fetch(`${URL_PREFIX}/api/config`);
-        const config = await response.json();
-        const bgUrl = config.background_image || `${URL_PREFIX}/static/images/os-bg.png`;
-        updateBackground(bgUrl);
-    } catch (error) {
-        console.error('Failed to load background:', error);
-        updateBackground(`${URL_PREFIX}/static/images/os-bg.png`);
+    async function loadBackground() {
+        try {
+            const storedBg = localStorage.getItem('background_image');
+            if (storedBg) return updateBackground(storedBg);
+            const urlPrefix = window.URL_PREFIX || '';
+            const response = await fetch(`${urlPrefix}/api/config`);
+            const config = await response.json();
+            updateBackground(config.background_image || `${urlPrefix}/static/images/os-bg.png`);
+        } catch (error) {
+            console.error('Background load error:', error);
+            const urlPrefix = window.URL_PREFIX || '';
+            updateBackground(`${urlPrefix}/static/images/os-bg.png`);
+        }
     }
-    })();
 
-    // Listen for background changes from editor
-    window.addEventListener('message', (event) => {
-    if (event.data.action === 'changeBackgroundImage') {
-        updateBackground(event.data.image);
-    }
-    });
+    // Initialize background
+    await loadBackground();
 })();
+
+console.log()

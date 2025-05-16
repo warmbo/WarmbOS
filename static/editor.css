@@ -1,0 +1,142 @@
+body {
+    overflow-y: auto;
+}
+/* Configuration form */
+
+#config-form {
+  padding: 0;
+  box-sizing: border-box;
+}
+#config-form .container {
+    overflow-y:auto;
+    height: 91vh;
+}
+.section {
+  margin-bottom: 0;
+  border-bottom: 1px solid #333;
+  overflow: hidden;
+}
+.entries {
+  display: none;
+  padding: 0.5rem;
+  background: #181818;
+}
+.entry {
+  margin-bottom: 0.5rem;
+  border: 1px solid #444;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #222;
+  cursor: move;
+}
+.entry.dragging {
+  opacity: 0.5;
+  border: 1px dashed #666;
+}
+.entry-placeholder {
+  border: 1px dashed #666;
+  background-color: #222;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  height: 50px;
+}
+.entry-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #333;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+}
+.entry-header label {
+  margin: 0;
+}
+
+/* Form elements */
+h2 {
+  font-size: 1.1rem;
+  background-color: #1e1e1e;
+  padding: 0.5rem;
+  margin: 0;
+  cursor: pointer;
+}
+label {
+  display: block;
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+}
+input, select {
+  width: 97%;
+  padding: 0.55rem;
+  margin-top: 0.3rem;
+  background: #111;
+  color: white;
+  border: 1px solid #333;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Buttons */
+.expand-btn, .move-btn, .remove-btn {
+  background: #555;
+  border: none;
+  color: white;
+  padding: 0 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  font-size: 1rem;
+  user-select: none;
+    width: 28px;
+  height: 28px;
+}
+.expand-btn {
+  width: 28px;
+  height: 28px;
+  font-weight: bold;
+  line-height: 22px;
+}
+.expand-btn:hover, .move-btn:hover {
+  background: #777;
+}
+.remove-btn {
+  background: #a33;
+}
+.remove-btn:hover {
+  background: #d55;
+}
+.add-btn, .save-btn {
+  margin: 0.5rem;
+  padding: 0.5rem;
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #444;
+  cursor: pointer;
+  border-radius: 4px;
+}
+.save-btn img {
+  height: 12px;
+  width: 12px;
+  vertical-align: middle;
+}
+
+/* Icon selector */
+.icon-selector {
+  background: #222;
+  padding: 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+  border: 1px solid #444;
+}
+.icon-selector label {
+  margin-bottom: 0.5rem;
+}
+.icon-selector select {
+  width: 100%;
+}
+.or-text {
+  display: block;
+  text-align: center;
+  margin: 0.5rem 0;
+  color: #888;
+  font-size: 0.8rem;
+}

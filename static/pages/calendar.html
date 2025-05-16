@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar</title>
+    <link rel="stylesheet" href="{{ URL_PREFIX }}/../../styles.css">
+    <style>
+        /* Calendar-specific styles that don't exist in the
+         main stylesheet */
+
+         body {
+            padding: 20px;
+         }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            background-color: rgba(25,25,25,.9);
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .calendar-header-cell {
+            padding: 10px 5px;
+        }
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+        }
+        
+        .calendar-day {
+            min-height: 80px;
+            padding: 5px;
+            border: 1px solid #3f3f46;
+        }
+        
+        .calendar-day-number {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .calendar-day.today .calendar-day-number {
+            font-weight: bold;
+            color: #3f9fff;
+        }
+        
+        .calendar-day.different-month {
+            background-color: rgba(0,0,0,.3);
+            color: #52525b;
+        }
+
+        .calendar-nav {
+            margin-bottom: 8px;
+        }
+        
+        .hour-grid {
+            display: grid;
+            grid-template-rows: repeat(24, 40px);
+        }
+        
+        .hour-slot {
+            display: flex;
+            border-top: 1px solid #3f3f46;
+        }
+        
+        .hour-label {
+            width: 60px;
+            color: #666;
+            font-size: 12px;
+            text-align: right;
+            padding-right: 10px;
+        }
+        
+        .hour-content {
+            flex-grow: 1;
+        }
+
+        #theme-toggle {
+            display: none;
+        }
+
+        #current-month {
+            min-width: 200px;
+            display: inline-block;
+        }
+
+        .view-selector {
+            margin: 8px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .calendar-day {
+                min-height: 60px;
+                padding: 2px;
+            }
+        }
+        
+        @media (max-width: 400px) {
+            #current-month {
+                min-width: 150px;
+                font-size: 14px;
+            }
+            
+            .calendar-nav button {
+                min-width: 30px;
+                padding: 3px 5px;
+                font-size: 12px;
+            }
+            
+            .view-selector button {
+                padding: 3px 5px;
+                font-size: 12px;
+            }
+            
+            .calendar-header-cell {
+                padding: 5px 2px;
+                font-size: 12px;
+            }
+            
+            .calendar-day {
+                min-height: 40px;
+                padding: 1px;
+            }
+            
+            .calendar-day-number {
+                font-size: 11px;
+                margin-bottom: 2px;
+            }
+            
+            .week-view .calendar-day {
+                min-height: 100px;
+            }
+            
+            .hour-label {
+                width: 40px;
+                font-size: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="calendar-nav">
+                <button id="prev-month" class="move-btn">←</button>
+                <span id="current-month">May 2025</span>
+                <button id="next-month" class="move-btn">→</button>
+                <button id="today-btn" class="move-btn">Today</button>
+            </div>
+
+            <div class="view-selector">
+                <button data-view="month" class="active move-btn">Month</button>
+                <button data-view="week" class="move-btn">Week</button>
+                <button data-view="day" class="move-btn">Day</button>
+                <button id="theme-toggle"></button>
+            </div>
+        </div>
+
+        <div id="calendar" class="calendar">
+            <div class="calendar-header">
+                <div class="calendar-header-cell">Su</div>
+                <div class="calendar-header-cell">Mo</div>
+                <div class="calendar-header-cell">Tu</div>
+                <div class="calendar-header-cell">We</div>
+                <div class="calendar-header-cell">Th</div>
+                <div class="calendar-header-cell">Fr</div>
+                <div class="calendar-header-cell">Sa</div>
+            </div>
+            <div id="calendar-grid" class="calendar-grid">
+                <!-- Calendar days will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simplified Calendar Class
+        class Calendar {
+            constructor() {
+                this.today = new Date();
+                this.currentDate = new Date();
+                this.currentView = 'month';
+                
+                // DOM elements
+                this.calendarGrid = document.getElementById('calendar-grid');
+                this.currentMonthElement = document.getElementById('current-month');
+                
+                // Check for mobile view
+                this.isMobile = window.innerWidth <= 400;
+                
+                // Initialize
+                this.initEventListeners();
+                this.renderCalendar();
+                this.checkTheme();
+                
+                // Update layout on window resize
+                window.addEventListener('resize', () => {
+                    const wasMobile = this.isMobile;
+                    this.isMobile = window.innerWidth <= 400;
+                    
+                    // Only re-render if mobile state changed
+                    if (wasMobile !== this.isMobile) {
+                        this.renderCalendar();
+                    }
+                });
+            }
+            
+            initEventListeners() {
+                // Navigation buttons
+                document.getElementById('prev-month').addEventListener('click', () => this.navigateMonth(-1));
+                document.getElementById('next-month').addEventListener('click', () => this.navigateMonth(1));
+                document.getElementById('today-btn').addEventListener('click', () => this.goToToday());
+                
+                // View switcher buttons
+                document.querySelectorAll('[data-view]').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        document.querySelectorAll('[data-view]').forEach(btn => btn.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.switchView(e.target.dataset.view);
+                    });
+                });
+                
+                // Theme toggle
+                document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
+            }
+            
+            navigateMonth(direction) {
+                this.currentDate.setMonth(this.currentDate.getMonth() + direction);
+                this.renderCalendar();
+            }
+            
+            goToToday() {
+                this.currentDate = new Date();
+                this.renderCalendar();
+            }
+            
+            switchView(view) {
+                this.currentView = view;
+                this.renderCalendar();
+            }
+            
+            toggleTheme() {
+                document.body.classList.toggle('dark');
+                localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+            }
+            
+            checkTheme() {
+                const savedTheme = localStorage.getItem('theme');
+                const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                
+                if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+                    document.body.classList.add('dark');
+                }
+            }
+            
+            getMonthData() {
+                const year = this.currentDate.getFullYear();
+                const month = this.currentDate.getMonth();
+                
+                // First day of the month
+                const firstDay = new Date(year, month, 1);
+                // Last day of the month
+                const lastDay = new Date(year, month + 1, 0);
+                
+                // Get the day of the week for the first day (0 = Sunday, 6 = Saturday)
+                const startingDayOfWeek = firstDay.getDay();
+                
+                // Days from previous month to display
+                const daysFromPrevMonth = startingDayOfWeek;
+                
+                // Days from current month
+                const daysInMonth = lastDay.getDate();
+                
+                // Get the last day of previous month
+                const prevMonthLastDay = new Date(year, month, 0).getDate();
+                
+                // Build the calendar days array
+                const calendarDays = [];
+                
+                // Add days from previous month
+                for (let i = daysFromPrevMonth - 1; i >= 0; i--) {
+                    const day = prevMonthLastDay - i;
+                    const date = new Date(year, month - 1, day);
+                    calendarDays.push({
+                        date,
+                        dayOfMonth: day,
+                        isCurrentMonth: false,
+                        isToday: this.isToday(date)
+                    });
+                }
+                
+                // Add days from current month
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const date = new Date(year, month, i);
+                    calendarDays.push({
+                        date,
+                        dayOfMonth: i,
+                        isCurrentMonth: true,
+                        isToday: this.isToday(date)
+                    });
+                }
+                
+                // Add days from next month to complete the grid
+                const totalCells = 42; // 6 rows of 7 days
+                const remainingCells = totalCells - calendarDays.length;
+                
+                for (let i = 1; i <= remainingCells; i++) {
+                    const date = new Date(year, month + 1, i);
+                    calendarDays.push({
+                        date,
+                        dayOfMonth: i,
+                        isCurrentMonth: false,
+                        isToday: this.isToday(date)
+                    });
+                }
+                
+                return calendarDays;
+            }
+            
+            isToday(date) {
+                return date.getDate() === this.today.getDate() &&
+                       date.getMonth() === this.today.getMonth() &&
+                       date.getFullYear() === this.today.getFullYear();
+            }
+            
+            formatDateForDisplay() {
+                if (this.currentView === 'month') {
+                    const options = this.isMobile ? 
+                        { month: 'short', year: 'numeric' } : 
+                        { month: 'long', year: 'numeric' };
+                    return this.currentDate.toLocaleDateString('en-US', options);
+                } else if (this.currentView === 'week') {
+                    // First day of the week for the current date
+                    const currentDay = this.currentDate.getDay();
+                    const firstDayOfWeek = new Date(this.currentDate);
+                    firstDayOfWeek.setDate(this.currentDate.getDate() - currentDay);
+                    
+                    // Last day of the week
+                    const lastDayOfWeek = new Date(firstDayOfWeek);
+                    lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+                    
+                    // Use shorter format for mobile
+                    if (this.isMobile) {
+                        const firstDayStr = firstDayOfWeek.toLocaleDateString('en-US', { day: 'numeric' });
+                        const lastDayStr = lastDayOfWeek.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+                        return `${firstDayStr}-${lastDayStr}`;
+                    } else {
+                        const firstDayStr = firstDayOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                        const lastDayStr = lastDayOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                        return `${firstDayStr} - ${lastDayStr}`;
+                    }
+                } else if (this.currentView === 'day') {
+                    const options = this.isMobile ? 
+                        { month: 'short', day: 'numeric' } : 
+                        { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+                    return this.currentDate.toLocaleDateString('en-US', options);
+                }
+                
+                // Default format
+                const options = { month: 'long', year: 'numeric' };
+                return this.currentDate.toLocaleDateString('en-US', options);
+            }
+            
+            formatDateString(date) {
+                // Format: YYYY-MM-DD
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            }
+            
+            renderCalendar() {
+                // Update month/year display
+                this.currentMonthElement.textContent = this.formatDateForDisplay();
+                
+                // Clear existing calendar grid
+                this.calendarGrid.innerHTML = '';
+                
+                if (this.currentView === 'month') {
+                    this.renderMonthView();
+                } else if (this.currentView === 'week') {
+                    this.renderWeekView();
+                } else if (this.currentView === 'day') {
+                    this.renderDayView();
+                }
+            }
+            
+            renderMonthView() {
+                document.getElementById('calendar').className = 'calendar';
+                const calendarDays = this.getMonthData();
+                
+                // Render each day in the grid
+                calendarDays.forEach(day => {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('calendar-day');
+                    
+                    if (!day.isCurrentMonth) {
+                        dayElement.classList.add('different-month');
+                    }
+                    
+                    if (day.isToday) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    const dateString = this.formatDateString(day.date);
+                    dayElement.dataset.date = dateString;
+                    
+                    // Day number
+                    const dayNumber = document.createElement('div');
+                    dayNumber.classList.add('calendar-day-number');
+                    dayNumber.textContent = day.dayOfMonth;
+                    dayElement.appendChild(dayNumber);
+                    
+                    this.calendarGrid.appendChild(dayElement);
+                });
+            }
+            
+            renderWeekView() {
+                document.getElementById('calendar').className = 'calendar week-view';
+                
+                // Get the first day of the week (Sunday) for the current date
+                const currentDay = this.currentDate.getDay();
+                const firstDayOfWeek = new Date(this.currentDate);
+                firstDayOfWeek.setDate(this.currentDate.getDate() - currentDay);
+                
+                // Create a week of days
+                for (let i = 0; i < 7; i++) {
+                    const day = new Date(firstDayOfWeek);
+                    day.setDate(firstDayOfWeek.getDate() + i);
+                    
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('calendar-day');
+                    
+                    if (this.isToday(day)) {
+                        dayElement.classList.add('today');
+                    }
+                    
+                    const dateString = this.formatDateString(day);
+                    dayElement.dataset.date = dateString;
+                    
+                    // Day header with day of week and date
+                    const dayHeader = document.createElement('div');
+                    dayHeader.classList.add('calendar-day-number');
+                    
+                    // Use short format for day display on small screens
+                    const dayOfWeek = window.innerWidth <= 400 ? 
+                        day.toLocaleDateString('en-US', { weekday: 'narrow' }) : 
+                        day.toLocaleDateString('en-US', { weekday: 'short' });
+                    const dayOfMonth = day.getDate();
+                    dayHeader.textContent = `${dayOfWeek} ${dayOfMonth}`;
+                    
+                    dayElement.appendChild(dayHeader);
+                    this.calendarGrid.appendChild(dayElement);
+                }
+            }
+            
+            renderDayView() {
+                document.getElementById('calendar').className = 'calendar day-view';
+                
+                // Create header for the day view
+                const headerDay = document.createElement('div');
+                headerDay.classList.add('calendar-header-cell');
+                
+                // Use shorter format on small screens
+                if (window.innerWidth <= 400) {
+                    headerDay.textContent = this.currentDate.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
+                } else {
+                    headerDay.textContent = this.currentDate.toLocaleDateString('en-US', { weekday: 'long' });
+                }
+                
+                // Clear and update the calendar header
+                const calendarHeader = document.querySelector('.calendar-header');
+                calendarHeader.innerHTML = '';
+                calendarHeader.appendChild(headerDay);
+                
+                // Create the hour grid
+                const hourGrid = document.createElement('div');
+                hourGrid.classList.add('hour-grid');
+                
+                // Create 24 hour slots
+                for (let hour = 0; hour < 24; hour++) {
+                    const hourSlot = document.createElement('div');
+                    hourSlot.classList.add('hour-slot');
+                    
+                    // Hour label (12-hour format with AM/PM)
+                    const hourLabel = document.createElement('div');
+                    hourLabel.classList.add('hour-label');
+                    
+                    const displayHour = hour % 12 || 12;
+                    // On tiny screens, don't show AM/PM
+                    const amPm = window.innerWidth <= 400 ? '' : (hour < 12 ? 'AM' : 'PM');
+                    hourLabel.textContent = `${displayHour}${amPm}`;
+                    
+                    // Hour content area
+                    const hourContent = document.createElement('div');
+                    hourContent.classList.add('hour-content');
+                    
+                    hourSlot.appendChild(hourLabel);
+                    hourSlot.appendChild(hourContent);
+                    hourGrid.appendChild(hourSlot);
+                }
+                
+                this.calendarGrid.appendChild(hourGrid);
+            }
+        }
+        
+        // Initialize the calendar when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            new Calendar();
+        });
+    </script>
+</body>
+</html>
