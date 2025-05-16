@@ -6,42 +6,11 @@
       "width": "360px",
       "height": "420px",
       "icon": "/static/images/apps/system/calendar.svg"
-    },
-    {
-      "title": "Homepage",
-      "url": "https://warho.me/",
-      "width": "",
-      "height": "",
-      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/homepage.png"
     }
   ],
   "main_menu": [
     {
-      "heading": "Servers"
-    },
-    {
-      "title": "pve-geminar",
-      "url": "https://10.0.0.99:8006",
-      "width": "1280px",
-      "height": "768px",
-      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox-light.svg"
-    },
-    {
-      "title": "pve-jurai",
-      "url": "https://10.0.0.98:8006",
-      "width": "",
-      "height": "",
-      "icon": "https://cdn.jsdelivr.net/gh/selfhst/icons/svg/proxmox-light.svg"
-    },
-    {
-      "heading": "Network"
-    },
-    {
-      "title": "OPNsense",
-      "url": "http://10.0.0.1",
-      "width": "",
-      "height": "",
-      "icon": ""
+      "heading": "Main Menu"
     }
   ],
   "taskbar_unique": [
