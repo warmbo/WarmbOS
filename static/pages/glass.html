@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Glass UI Effects Showcase</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to top right, #111, #222);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: center;
+      color: #fff;
+    }
+
+    .card {
+      width: 250px;
+      height: 150px;
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* All 20 glass styles from previous message, copied below */
+
+    .glass-1 {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.15);
+    }
+    .glass-1::after {
+      content: "";
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 60px;
+      background: radial-gradient(circle at center, rgba(0, 255, 255, 0.4), transparent);
+      filter: blur(20px);
+      z-index: -1;
+    }
+
+    .glass-mac {
+      background: rgba(255, 255, 255, 0.25);
+      backdrop-filter: saturate(180%) blur(20px);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: inset 0 0 0.5px rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-depth {
+      background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.15));
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px rgba(31, 38, 135, 0.2);
+    }
+
+    .vista-pane {
+      background: rgba(30, 30, 30, 0.3);
+      backdrop-filter: blur(18px) saturate(160%);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 20px rgba(0, 120, 255, 0.3);
+    }
+
+    .glow-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .glow-card::before {
+      content: "";
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120px;
+      height: 30px;
+      background: radial-gradient(ellipse at center, rgba(255,255,255,0.3), transparent);
+      filter: blur(10px);
+    }
+
+    .glass-btn {
+      background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.05));
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 6px;
+      backdrop-filter: blur(10px);
+      color: white;
+      text-shadow: 0 1px 1px black;
+    }
+
+    .neon-frost {
+      background: rgba(20, 20, 20, 0.3);
+      border-radius: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 0 40px rgba(0, 255, 180, 0.5);
+    }
+
+    .aero-glow {
+      background: rgba(40, 40, 40, 0.4);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 10px;
+      box-shadow: inset 0 0 8px rgba(0, 120, 255, 0.4);
+    }
+
+    .mac-alert {
+      background: rgba(240, 240, 240, 0.15);
+      border: 1px solid rgba(255,255,255,0.4);
+      backdrop-filter: blur(25px);
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(200,200,255,0.2);
+    }
+
+    .frost-sidebar {
+      background: rgba(255, 255, 255, 0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(20px);
+    }
+
+    .frost-ring {
+      background: radial-gradient(circle at center bottom, rgba(255,255,255,0.3), transparent 70%);
+      backdrop-filter: blur(15px);
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+    }
+
+    .ios-widget {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(24px);
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .glass-bottom-strip {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(16px);
+      border-radius: 10px;
+    }
+
+    .glass-bottom-strip::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      width: 60%;
+      height: 20px;
+      transform: translateX(-50%);
+      background: linear-gradient(to top, rgba(255,255,255,0.4), transparent);
+      border-radius: 10px 10px 0 0;
+    }
+
+    .glow-input {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      color: white;
+      box-shadow: 0 0 8px rgba(0, 200, 255, 0.4);
+    }
+
+    .floating-glass {
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(18px);
+      border-radius: 14px;
+      box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .mac-notify {
+      background: rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(30px) saturate(180%);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(200,200,255,0.3);
+    }
+
+    .glass-orb {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: radial-gradient(circle at bottom, rgba(255,255,255,0.4), rgba(255,255,255,0.05));
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .aero-tab {
+      background: rgba(50, 50, 50, 0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 6px 6px 0 0;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .glass-footer {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(18px);
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+
+    .glass-footer::after {
+      content: '';
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      height: 40px;
+      background: radial-gradient(ellipse at center, rgba(0,255,255,0.2), transparent);
+      filter: blur(10px);
+    }
+
+    .terminal-glass {
+      background: rgba(20, 20, 20, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #00ffcc;
+      font-family: monospace;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="card glass-1">Glass 1</div>
+  <div class="card glass-mac">Mac Dock</div>
+  <div class="card glass-depth">Glass Depth</div>
+  <div class="card vista-pane">Vista Pane</div>
+  <div class="card glow-card">Bottom Glow</div>
+  <div class="card glass-btn">Vista Button</div>
+  <div class="card neon-frost">Neon Frost</div>
+  <div class="card aero-glow">Aero Glow</div>
+  <div class="card mac-alert">Mac Alert</div>
+  <div class="card frost-sidebar">Sidebar</div>
+  <div class="card frost-ring"></div>
+  <div class="card ios-widget">iOS Widget</div>
+  <div class="card glass-bottom-strip">Bottom Strip</div>
+  <div class="card glow-input">Glow Input</div>
+  <div class="card floating-glass">Floating</div>
+  <div class="card mac-notify">Mac Notify</div>
+  <div class="card glass-orb"></div>
+  <div class="card aero-tab">Aero Tab</div>
+  <div class="card glass-footer">Footer</div>
+  <div class="card terminal-glass">Terminal</div>
+</body>
+</html>
