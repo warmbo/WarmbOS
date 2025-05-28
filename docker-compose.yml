@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  warmbos:
+    image: python:3.11-slim
+    ports:
+      - "5000:5000"
+    volumes:
+      - warmbos_data:/app/data
+    working_dir: /app
+    command: >
+      bash -c "
+      apt-get update && apt-get install -y git curl &&
+      git clone https://github.com/warmbo/WarmbOS.git . &&
+      pip install -r requirements.txt &&
+      python app.py
+      "
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  warmbos_data:
