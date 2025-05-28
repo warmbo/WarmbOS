@@ -103,6 +103,13 @@ The project dependencies are listed in the `requirements.txt` file. Install them
 pip install -r requirements.txt
 ```
 
+## Planned Features
+
+* Integration with selfh.st/icons
+* Upload images for avatar and wallpaper
+* Apps (Terminal, Notepad, Calendar, Network Map)
+* Ability to call APIs
+* Better handling of desktop icon locations and window management
 
 ## Contributing
 
