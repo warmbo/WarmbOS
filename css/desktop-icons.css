@@ -1,0 +1,77 @@
+@import url('./variables.css');
+
+#desktop-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 98px);
+    grid-auto-rows: 116px;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-content: start;
+    padding: 8px;
+}
+
+.grid-cell {
+    width: 90px;
+    height: 108px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-cell.occupied {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+#desktop-icons a.open-window {
+    display: inline-block;
+    max-width: 90px;
+    height: 108px;
+    text-decoration: none;
+    cursor: grab;
+    width: 90px;
+    margin: 0;
+}
+
+#desktop-icons a.open-window:active {
+    cursor: grabbing;
+}
+
+.icon {
+    border-radius: 4px;
+    display: inline-block;
+    margin: 0;
+    padding: 8px;
+    font-size: 0.825em;
+    text-align: center;
+    color: var(--text-primary);
+    user-select: none;
+    text-overflow: ellipsis;
+    transition: var(--transition);
+    background: none;
+    width: 90px;
+    box-sizing: border-box;
+}
+
+.icon img {
+    user-select: none;
+    pointer-events: none;
+}
+
+#desktop-icons .icon.dragging {
+    opacity: 0.5;
+    z-index: 10000;
+    box-shadow: 0 0 10px #0008;
+}
+
+#desktop-icons .icon.placeholder {
+    border: 2px dashed #fff8;
+    background: rgba(255,255,255,0.07);
+    opacity: 0.7;
+    min-width: 90px;
+    min-height: 108px;
+}

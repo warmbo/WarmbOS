@@ -3,27 +3,21 @@ import { initializeStartMenuToggle } from './start-menu.js';
 import { initializeClock } from './clock.js';
 import { bringWindowToFront } from './window-helpers.js';
 
-// Fetch and load UI components
+// Load UI components and initialize features
 Promise.all([
     fetch('../components/taskbar.html').then(r => r.text()).then(html => document.getElementById('taskbar').innerHTML = html),
     fetch('../components/start-menu.html').then(r => r.text()).then(html => document.getElementById('start-menu').innerHTML = html),
     fetch('../components/desktop-icons.html').then(r => r.text()).then(html => document.getElementById('desktop-icons').innerHTML = html)
 ]).then(() => {
-    console.log("[Init] UI components loaded");
-
-    // Initialize features
     initializeWindowCreation();
     initializeStartMenuToggle();
     initializeClock();
 
-    // Load icons from JSON file and render desktop icons, taskbar items, and start menu items dynamically
+    // Load shortcuts and render UI
     fetch('../shortcuts.json')
         .then(response => response.json())
         .then(data => {
-            // Support both array and object format for backward compatibility
-            let desktopList = [];
-            let taskbarList = [];
-            let startMenuList = [];
+            let desktopList = [], taskbarList = [], startMenuList = [];
             if (Array.isArray(data)) {
                 desktopList = data;
             } else {
@@ -31,7 +25,7 @@ Promise.all([
                 if (data.taskbar) taskbarList = data.taskbar;
                 if (data.startMenu) startMenuList = data.startMenu;
             }
-            // --- Desktop Icons ---
+            // Render desktop icons
             const desktopIconsContainer = document.getElementById('desktop-icons');
             desktopIconsContainer.innerHTML = '';
             if (desktopList.length) {
@@ -45,8 +39,6 @@ Promise.all([
                     a.dataset.title = icon.title;
                     a.dataset.content = contentPath || '';
                     a.dataset.icon = iconUrl || '';
-                    a.style.display = '';
-                    a.style.marginBottom = '';
                     const iconDiv = document.createElement('div');
                     iconDiv.className = 'icon';
                     const img = document.createElement('img');
@@ -62,7 +54,9 @@ Promise.all([
             } else {
                 desktopIconsContainer.innerHTML = '<div style="color:#ccc;text-align:center;margin-top:2em;">No desktop icons configured in shortcuts.json</div>';
             }
-            // --- Taskbar Items ---
+            makeDesktopIconsDraggable(desktopIconsContainer);
+
+            // Render taskbar items
             const taskbarItemsContainer = document.querySelector('.taskbar-items');
             if (taskbarItemsContainer) {
                 taskbarItemsContainer.innerHTML = '';
@@ -85,7 +79,7 @@ Promise.all([
                     });
                 }
             }
-            // --- Start Menu Items ---
+            // Render start menu items
             const startMenuContainer = document.querySelector('.start-menu-item-group');
             if (startMenuContainer) {
                 startMenuContainer.innerHTML = '';
@@ -113,13 +107,12 @@ Promise.all([
             }
             initializeWindowCreation();
 
-            // Desktop icon focus: bring window to front if already open
+            // Focus window if already open when clicking desktop icon
             desktopIconsContainer.addEventListener('click', function(e) {
                 const link = e.target.closest('a.open-window');
                 if (!link) return;
                 const title = link.dataset.title;
                 if (!title) return;
-                // Find the window with this title
                 const openWindows = document.querySelectorAll('.desktop .window');
                 for (const win of openWindows) {
                     const winTitle = win.querySelector('.window-title-text')?.textContent;
@@ -129,7 +122,7 @@ Promise.all([
                     }
                 }
             });
-            // Taskbar item focus: bring window to front if already open
+            // Focus window if already open when clicking taskbar item
             if (taskbarItemsContainer) {
                 taskbarItemsContainer.addEventListener('click', function(e) {
                     const btn = e.target.closest('button.open-window');
@@ -146,7 +139,7 @@ Promise.all([
                     }
                 });
             }
-            // Start menu item focus: bring window to front if already open
+            // Focus window if already open when clicking start menu item
             if (startMenuContainer) {
                 startMenuContainer.addEventListener('click', function(e) {
                     const link = e.target.closest('a.open-window');
@@ -167,9 +160,105 @@ Promise.all([
         .catch(e => {
             const desktopIconsContainer = document.getElementById('desktop-icons');
             if (desktopIconsContainer) {
-                desktopIconsContainer.innerHTML = '<div style="color:#f66;text-align:center;margin-top:2em;">Failed to load desktop icons: ' + e + '</div>';
+                desktopIconsContainer.innerHTML = `<div style="color:#f66;text-align:center;margin-top:2em;">Failed to load desktop icons: ${e}</div>`;
             }
         });
 });
+
+/**
+ * Makes desktop icons draggable and arranges them in a grid.
+ * @param {HTMLElement} container - The container for desktop icons.
+ */
+function makeDesktopIconsDraggable(container) {
+    const desktop = container.closest('.desktop');
+
+    function getGridSize() {
+        const desktopRect = desktop.getBoundingClientRect();
+        const taskbar = desktop.querySelector('.taskbar');
+        const taskbarHeight = taskbar ? taskbar.offsetHeight : 40;
+        const cols = Math.floor(desktopRect.width / 98);
+        const rows = Math.floor((desktopRect.height - taskbarHeight) / 116);
+        return {cols, rows};
+    }
+
+    function renderGridAndIcons() {
+        const icons = Array.from(container.querySelectorAll('.open-window'));
+        icons.forEach(icon => icon.remove());
+        const { cols, rows } = getGridSize();
+        const totalCells = cols * rows;
+        container.innerHTML = '';
+        for (let i = 0; i < totalCells; i++) {
+            const cell = document.createElement('div');
+            cell.className = 'grid-cell';
+            cell.dataset.index = i;
+            container.appendChild(cell);
+        }
+        // Place icons in a single column (vertical stack)
+        for (let i = 0; i < icons.length; i++) {
+            const cellIndex = i;
+            const cell = container.children[cellIndex];
+            if (cell) {
+                cell.classList.add('occupied');
+                cell.appendChild(icons[i]);
+            }
+        }
+    }
+
+    renderGridAndIcons();
+
+    let dragSrcEl = null;
+    let dragSrcCell = null;
+
+    function handleDragStart(e) {
+        dragSrcEl = this;
+        dragSrcCell = this.closest('.grid-cell');
+        this.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        const targetCell = e.target.closest('.grid-cell');
+        if (!targetCell || targetCell === dragSrcCell) return;
+        e.dataTransfer.dropEffect = 'move';
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const targetCell = e.target.closest('.grid-cell');
+        if (!targetCell || !dragSrcEl) return;
+        const targetIcon = targetCell.querySelector('.open-window');
+        if (targetIcon) {
+            dragSrcCell.appendChild(targetIcon);
+        }
+        targetCell.appendChild(dragSrcEl);
+        dragSrcCell.classList.toggle('occupied', !!dragSrcCell.querySelector('.open-window'));
+        targetCell.classList.add('occupied');
+    }
+
+    function handleDragEnd() {
+        this.classList.remove('dragging');
+        dragSrcEl = null;
+        dragSrcCell = null;
+    }
+
+    function addDragHandlers() {
+        Array.from(container.querySelectorAll('.open-window')).forEach(icon => {
+            icon.setAttribute('draggable', 'true');
+            icon.removeEventListener('dragstart', handleDragStart);
+            icon.removeEventListener('dragend', handleDragEnd);
+            icon.addEventListener('dragstart', handleDragStart);
+            icon.addEventListener('dragend', handleDragEnd);
+        });
+    }
+
+    addDragHandlers();
+    container.addEventListener('dragover', handleDragOver);
+    container.addEventListener('drop', handleDrop);
+    window.addEventListener('resize', () => {
+        renderGridAndIcons();
+        addDragHandlers();
+    });
+}
 
 
