@@ -4,13 +4,13 @@ A minimal web-based desktop environment for use as a startpage, homelab manageme
 
 ## Screenshots
 
-![Desktop](https://i.imgur.com/DGt8bmp.png)
+![Desktop](https://i.imgur.com/DGt8bmp.png)  
 Desktop
 
-![Settings Menus](https://i.imgur.com/S3sANat.png)
+![Settings Menus](https://i.imgur.com/S3sANat.png)  
 Settings
 
-![System Info](https://i.imgur.com/Kag3olD.png)
+![System Info](https://i.imgur.com/Kag3olD.png)  
 System Info
 
 
