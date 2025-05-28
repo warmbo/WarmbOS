@@ -197,25 +197,74 @@ export function addTaskbarItem(title, windowEl, iconUrl) {
     const taskbar = document.querySelector('.taskbar-items');
     if (!taskbar) return;
 
-    // Check for an existing taskbar item with the same windowId
-    const existing = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
-    if (existing) {
-        // If the item already exists, ensure it is bound to the window
-        if (!existing.dataset.bound) {
-            existing.addEventListener('click', () => {
+    // Prevent creating a new taskbar item if a static .open-window already exists
+    const staticOpenWindow = Array.from(taskbar.querySelectorAll('.taskbar-item.open-window')).find(item => {
+        return item.textContent.trim() === title.trim();
+    });
+    if (staticOpenWindow) {
+        // Bind this static item to the window if not already bound
+        staticOpenWindow.dataset.windowId = windowEl.dataset.windowId;
+        if (!staticOpenWindow.dataset.bound) {
+            staticOpenWindow.addEventListener('click', () => {
                 windowEl.classList.remove('minimized');
                 windowEl.style.display = '';
                 bringWindowToFront(windowEl);
             });
-            existing.dataset.bound = 'true';
+            staticOpenWindow.dataset.bound = 'true';
+        }
+        return;
+    }
+
+    // First, check for an existing taskbar item with the same windowId
+    const existingById = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
+    if (existingById) {
+        // If the item already exists with matching windowId, ensure it is bound to the window
+        if (!existingById.dataset.bound) {
+            existingById.addEventListener('click', () => {
+                windowEl.classList.remove('minimized');
+                windowEl.style.display = '';
+                bringWindowToFront(windowEl);
+            });
+            existingById.dataset.bound = 'true';
         }
         return; // Exit to prevent duplication
     }
 
-    // Create a new taskbar item if none exists
+    // Check for existing static taskbar item with matching title/text content
+    const existingByTitle = Array.from(taskbar.querySelectorAll('.taskbar-item')).find(item => {
+        const itemText = item.textContent.trim();
+        return itemText === title.trim() && item.dataset.static === 'true';
+    });
+
+    if (existingByTitle) {
+        // Assign windowId to window if missing
+        if (!windowEl.dataset.windowId) {
+            windowEl.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
+        }
+        // Reuse the existing static item - bind it to this window
+        existingByTitle.dataset.windowId = windowEl.dataset.windowId;
+        existingByTitle.dataset.bound = 'true';
+
+        // Remove all previous click listeners by replacing with a fresh handler
+        existingByTitle.replaceWith(existingByTitle.cloneNode(true));
+        const updatedItem = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
+        if (updatedItem) {
+            updatedItem.dataset.static = 'true';
+            updatedItem.dataset.bound = 'true';
+            updatedItem.addEventListener('click', () => {
+                windowEl.classList.remove('minimized');
+                windowEl.style.display = '';
+                bringWindowToFront(windowEl);
+            });
+        }
+        return;
+    }
+
+    // Create a new taskbar item if none exists (neither by ID nor by title)
     const item = document.createElement('button');
     item.className = 'taskbar-item';
     item.dataset.windowId = windowEl.dataset.windowId;
+    item.dataset.bound = 'true';
     if (iconUrl) {
         const img = document.createElement('img');
         img.src = iconUrl;
@@ -236,11 +285,16 @@ export function removeTaskbarItem(windowEl) {
     const taskbar = document.querySelector('.taskbar-items');
     if (!taskbar) return;
     const item = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
-    // Only remove if not static (not from JSON)
+    // Only remove if not static (not from JSON or pre-existing)
     if (item && !item.dataset.static) {
         item.remove();
     } else if (item && item.dataset.static) {
         // If static, just visually deactivate (optional, for clarity)
         item.classList.remove('active-window');
+        // Also clear the windowId and bound status so it can be reused
+        delete item.dataset.windowId;
+        delete item.dataset.bound;
     }
 }
+
+

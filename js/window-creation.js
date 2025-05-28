@@ -1,6 +1,6 @@
 import { makeWindowDraggable, addWindowControls, bringWindowToFront } from './window-helpers.js';
 
-export function createWindow(title, content, iconUrl) {
+export function createWindow(title, content, iconUrl, skipTaskbar) {
     // Check if a window with this title is already open
     const openWindows = document.querySelectorAll('.desktop .window');
     for (const win of openWindows) {
@@ -10,6 +10,7 @@ export function createWindow(title, content, iconUrl) {
             win.classList.remove('minimized');
             win.style.display = '';
             bringWindowToFront(win);
+            // Do NOT add a new taskbar item here (enforces the rule)
             return;
         }
     }
@@ -24,6 +25,12 @@ export function createWindow(title, content, iconUrl) {
     if (iconUrl) {
         const iconImg = windowClone.querySelector('.window-title img');
         if (iconImg) iconImg.src = iconUrl;
+    }
+
+    // Assign a unique windowId to the window element before adding to DOM
+    const windowEl = windowClone.querySelector('.window');
+    if (windowEl && !windowEl.dataset.windowId) {
+        windowEl.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
     }
 
     const contentElement = windowClone.querySelector('.window-content-text');
@@ -41,26 +48,23 @@ export function createWindow(title, content, iconUrl) {
 
     // Wait for DOM to update
     requestAnimationFrame(() => {
-        const windowEl = document.querySelector('.desktop .window:last-of-type');
+        // Use the windowId to select the correct window
+        const windowEl = document.querySelector(`.desktop .window[data-window-id]${windowClone.querySelector('.window') ? `[data-window-id='${windowClone.querySelector('.window').dataset.windowId}']` : ':last-of-type'}`);
         if (!windowEl) return console.error('[createWindow] Failed to find newly inserted window');
         console.log("[createWindow] Window added to DOM");
 
         bringWindowToFront(windowEl);
         makeWindowDraggable(windowEl);
         addWindowControls(windowEl);
-        // Add taskbar item immediately when window is opened
-        // Ensure windowId exists
-        if (!windowEl.dataset.windowId) {
-            windowEl.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
+        // Only add a taskbar item if not skipping (i.e., not a static open-window button)
+        if (!skipTaskbar) {
+            const iconImg = windowEl.querySelector('.window-title img');
+            const iconUrlFinal = iconImg ? iconImg.src : '';
+            const titleFinal = windowEl.querySelector('.window-title-text').textContent;
+            import('./window-helpers.js').then(mod => {
+                mod.addTaskbarItem(titleFinal, windowEl, iconUrlFinal);
+            });
         }
-        // Get iconUrl for taskbar item
-        const iconImg = windowEl.querySelector('.window-title img');
-        const iconUrlFinal = iconImg ? iconImg.src : '';
-        const titleFinal = windowEl.querySelector('.window-title-text').textContent;
-        // Import addTaskbarItem from window-helpers if not already
-        import('./window-helpers.js').then(mod => {
-            mod.addTaskbarItem(titleFinal, windowEl, iconUrlFinal);
-        });
     });
 }
 
@@ -68,7 +72,9 @@ export function initializeWindowCreation() {
     document.querySelectorAll('.open-window').forEach(link =>
         link.addEventListener('click', e => {
             e.preventDefault();
-            createWindow(link.dataset.title, link.dataset.content, link.dataset.icon);
+            // If this is a static taskbar item, pass skipTaskbar=true
+            const skipTaskbar = link.classList.contains('taskbar-item');
+            createWindow(link.dataset.title, link.dataset.content, link.dataset.icon, skipTaskbar);
         })
     );
 }

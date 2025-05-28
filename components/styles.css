@@ -193,6 +193,8 @@ body {
     border-radius: 4px;
     text-shadow: var(--text-shadow);
     transition: transform 0.2s ease;
+    color: var(--text-primary);
+    text-decoration: none;
 }
 
 .start-menu-item:active {
