@@ -3,7 +3,7 @@
     {
       "title": "My Computer",
       "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
-      "contentPath": "../apps/computer.html"
+      "contentPath": "/apps/computer.html"
     },
     {
       "title": "My Documents",
@@ -23,7 +23,7 @@
       "contentPath": "#app1"
     },
     {
-      "title": "App Title2",
+      "title": "App Title 2",
       "iconUrl": "https://img.icons8.com/?size=100&id=A6NzpssBf9Xg&format=png&color=000000",
       "contentPath": "#app2"
     },
@@ -37,7 +37,7 @@
     {
       "title": "My Computer",
       "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
-      "contentPath": "../apps/computer.html"
+      "contentPath": "/apps/computer.html"
     },
     {
       "title": "My Documents",

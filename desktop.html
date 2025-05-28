@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generic HTML Template</title>
-    <link rel="stylesheet" href="components/styles.css">
+    <link rel="stylesheet" href="styles.css">
     
 
 </head>
@@ -41,6 +41,22 @@
     </template>
 
     <script type="module" src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const flushBtn = document.getElementById('flush-storage-btn');
+            if (flushBtn) {
+            flushBtn.addEventListener('click', () => {
+                const confirmed = confirm("Are you sure you want to clear all settings and reload?");
+                if (confirmed) {
+                localStorage.clear();
+                location.reload();
+                }
+            });
+            } else {
+            console.warn("Flush button not found in DOM.");
+            }
+        });
+    </script>
     
 </body>
 </html>
