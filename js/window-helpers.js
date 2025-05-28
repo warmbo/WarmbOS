@@ -1,3 +1,17 @@
+// Centralized z-index logic for all windows
+export function bringWindowToFront(windowEl) {
+    const allWindows = document.querySelectorAll('.desktop .window');
+    let maxZ = 1001;
+    allWindows.forEach(w => {
+        const z = parseInt(w.style.zIndex) || 1001;
+        if (z > maxZ) maxZ = z;
+        w.classList.remove('active-window');
+    });
+    // Cap at 9000
+    windowEl.style.zIndex = Math.min(maxZ + 1, 9000);
+    windowEl.classList.add('active-window');
+}
+
 export function makeWindowDraggable(el) {
     const bar = el.querySelector('.window-title-bar');
     let drag = false, offsetX = 0, offsetY = 0;
@@ -5,7 +19,7 @@ export function makeWindowDraggable(el) {
 
     bar.addEventListener('mousedown', e => {
         if (e.target.closest('.window-title-button')) return; // Ignore titlebar buttons
-
+        if (el.classList.contains('maximized')) return; // Prevent drag if maximized
         drag = true;
         moved = false;
         offsetX = e.clientX - el.offsetLeft;
@@ -124,19 +138,16 @@ export function addWindowControls(el) {
 
     minimizeBtn?.addEventListener('click', () => {
         console.log("[minimize] Clicked");
+        el.classList.add('minimized');
         el.style.display = 'none';
-        const item = document.createElement('div');
-        item.className = 'taskbar-item app-item';
-        item.innerHTML = `
-            <img src="https://img.icons8.com/?size=100&id=TBZPt8cpsUdF&format=png&color=000000">
-            <span>${el.querySelector('.window-title-text').textContent}</span>
-        `;
-        item.onclick = () => {
-            console.log("[minimize] Restoring window from taskbar");
-            el.style.display = 'block';
-            item.remove();
-        };
-        document.querySelector('.taskbar .app-group')?.appendChild(item);
+        const iconImg = el.querySelector('.window-title img');
+        const iconUrl = iconImg ? iconImg.src : '';
+        const title = el.querySelector('.window-title-text').textContent;
+        // Ensure the window has a unique id for taskbar tracking
+        if (!el.dataset.windowId) {
+            el.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
+        }
+        addTaskbarItem(title, el, iconUrl);
     });
 
     maximizeBtn?.addEventListener('click', () => {
@@ -158,6 +169,78 @@ export function addWindowControls(el) {
 
     closeBtn?.addEventListener('click', () => {
         console.log("[close] Clicked");
+        removeTaskbarItem(el);
         el.remove();
     });
+
+    el.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.window')) {
+            bringWindowToFront(el);
+        }
+    });
+}
+
+export function minimizeWindow(windowEl) {
+    windowEl.classList.add('minimized');
+    // Find the icon from the window titlebar
+    const iconImg = windowEl.querySelector('.window-title img');
+    const iconUrl = iconImg ? iconImg.src : '';
+    const title = windowEl.querySelector('.window-title-text').textContent;
+    // Ensure the window has a unique id for taskbar tracking
+    if (!windowEl.dataset.windowId) {
+        windowEl.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
+    }
+    addTaskbarItem(title, windowEl, iconUrl);
+}
+
+export function addTaskbarItem(title, windowEl, iconUrl) {
+    const taskbar = document.querySelector('.taskbar-items');
+    if (!taskbar) return;
+
+    // Check for an existing taskbar item with the same windowId
+    const existing = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
+    if (existing) {
+        // If the item already exists, ensure it is bound to the window
+        if (!existing.dataset.bound) {
+            existing.addEventListener('click', () => {
+                windowEl.classList.remove('minimized');
+                windowEl.style.display = '';
+                bringWindowToFront(windowEl);
+            });
+            existing.dataset.bound = 'true';
+        }
+        return; // Exit to prevent duplication
+    }
+
+    // Create a new taskbar item if none exists
+    const item = document.createElement('button');
+    item.className = 'taskbar-item';
+    item.dataset.windowId = windowEl.dataset.windowId;
+    if (iconUrl) {
+        const img = document.createElement('img');
+        img.src = iconUrl;
+        img.alt = '';
+        img.className = 'taskbar-item-icon';
+        item.appendChild(img);
+    }
+    item.appendChild(document.createTextNode(title));
+    item.addEventListener('click', () => {
+        windowEl.classList.remove('minimized');
+        windowEl.style.display = '';
+        bringWindowToFront(windowEl);
+    });
+    taskbar.appendChild(item);
+}
+
+export function removeTaskbarItem(windowEl) {
+    const taskbar = document.querySelector('.taskbar-items');
+    if (!taskbar) return;
+    const item = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
+    // Only remove if not static (not from JSON)
+    if (item && !item.dataset.static) {
+        item.remove();
+    } else if (item && item.dataset.static) {
+        // If static, just visually deactivate (optional, for clarity)
+        item.classList.remove('active-window');
+    }
 }

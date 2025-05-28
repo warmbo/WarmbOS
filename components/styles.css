@@ -70,7 +70,7 @@ body {
     gap: 4px;
     padding: 4px;
     z-index: 9999;
-    font-variant-caps: small-caps;
+    
 }
 
 .taskbar-item, .app-item, .system-item {
@@ -101,7 +101,6 @@ body {
 
 .start-menu-button {
     font-size: 1em;
-    font-variant-caps: small-caps;
 }
 
 .app-group {
@@ -241,14 +240,22 @@ body {
 #desktop-icons {
     display: flex;
     flex-direction: column;
+    /* vertical stack, as in original desktop-icons.html */
+}
+
+#desktop-icons a.open-window {
+    display: inline-block;
+    max-width: 90px;
+    height: 108px;
+    margin: 8px;
+    text-decoration: none;
+    /* match .icon for alignment */
 }
 
 .icon {
-    max-width: 90px;
-    height: 108px;
     border-radius: 4px;
     display: inline-block;
-    margin: 8px;
+    margin: 0;
     padding: 8px;
     font-size: 0.825em;
     text-align: center;
@@ -256,6 +263,9 @@ body {
     user-select: none;
     text-overflow: ellipsis;
     transition: var(--transition);
+    background: none;
+    width: 90px;
+    box-sizing: border-box;
 }
 
 .icon span {
@@ -325,6 +335,7 @@ body {
     font-size: .875em;
     user-select: none;
     height: 32px;
+    
 }
 
 .window-title {
@@ -406,5 +417,11 @@ body {
   z-index: 9999;
   background: transparent;
   cursor: default;
+}
+
+.window.active-window {
+  outline: none;
+  box-shadow: none;
+  z-index: inherit;
 }
 
