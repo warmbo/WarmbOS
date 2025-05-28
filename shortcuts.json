@@ -1,0 +1,78 @@
+{
+  "taskbar": [
+    {
+      "title": "App Title",
+      "icon": "https://img.icons8.com/?size=100&id=TBZPt8cpsUdF&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "App Title",
+      "icon": "https://img.icons8.com/?size=100&id=A6NzpssBf9Xg&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "Another App",
+      "icon": "https://img.icons8.com/?size=100&id=a2NqBaHEmUuh&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "My Computer",
+      "icon": "https://img.icons8.com/?size=100&id=PUULuXvUfB6u&format=png&color=000000",
+      "url": "../apps/settings.html",
+      "width": 440,
+      "height": 300
+    }
+  ],
+  "desktop": [
+    {
+      "title": "My Computer",
+      "icon": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
+      "url": "computer.html",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "My Documents",
+      "icon": "https://img.icons8.com/?size=100&id=c2AXPLZ3iVEU&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "My Notes",
+      "icon": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    }
+  ],
+  "startMenu": [
+    {
+      "title": "App Title",
+      "icon": "https://img.icons8.com/?size=100&id=TBZPt8cpsUdF&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "App Title",
+      "icon": "https://img.icons8.com/?size=100&id=5vGNMY3d8lxd&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    },
+    {
+      "title": "App Title",
+      "icon": "https://img.icons8.com/?size=100&id=7ajzMJFrQ541&format=png&color=000000",
+      "url": "",
+      "width": 440,
+      "height": 300
+    }
+  ]
+}
