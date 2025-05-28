@@ -7,6 +7,11 @@ from flask import Flask, send_from_directory, jsonify, request
 import json
 import os
 from pathlib import Path
+import platform
+import shutil
+import socket
+import sys
+from datetime import datetime
 
 app = Flask(__name__, static_folder='.')
 
@@ -74,6 +79,64 @@ def save_settings():
     except Exception as e:
         print(f"Settings save error: {e}")  # Debug logging
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/system-info')
+def get_system_info():
+    try:
+        info = {
+            'os': {
+                'name': platform.system(),
+                'release': platform.release(),
+                'architecture': platform.architecture()[0]
+            },
+            'python': {
+                'version': platform.python_version()
+            }
+        }
+        return jsonify(info)
+    except Exception as e:
+        print(f"System info error: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/system')
+def system_info():
+    import platform
+    import shutil
+    import socket
+    import sys
+    from datetime import datetime
+    try:
+        total, used, free = shutil.disk_usage('.')
+        return jsonify({
+            'os': {
+                'system': platform.system(),
+                'release': platform.release(),
+                'version': platform.version(),
+                'machine': platform.machine(),
+                'processor': platform.processor() or 'Unknown'
+            },
+            'python': {
+                'version': platform.python_version(),
+                'implementation': platform.python_implementation(),
+                'executable': sys.executable
+            },
+            'disk': {
+                'total_gb': round(total / (1024**3), 1),
+                'used_gb': round(used / (1024**3), 1),
+                'free_gb': round(free / (1024**3), 1),
+                'percent': round((used / total) * 100, 1)
+            },
+            'network': {
+                'hostname': socket.gethostname(),
+                'fqdn': socket.getfqdn()
+            },
+            'warmbos': {
+                'version': '1.0.0-dev',
+                'server_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 @app.route('/<path:filename>')
 def serve_file(filename):

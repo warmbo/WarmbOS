@@ -1,14 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>My Computer</title>
-    </head>
-    <body>
-        <h1>Welcome to My Computer</h1>
-        <p>This window will be used to show system storage and specifications.</p>
-        <p>
-        <img src="https://cdni.iconscout.com/illustration/premium/thumb/analysis-server-network-5623450-4684180.png" width="570px">
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Information</title>
+    <link rel="stylesheet" href="../css/apps/computer.css">
+</head>
+<body>
+    <div class="header">
+        <div class="title">WarmbOS System Information</div>
+        <div class="version">Development Edition</div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Operating System</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">System</div>
+                <div class="info-value" id="os-system">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Release</div>
+                <div class="info-value" id="os-release">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Machine</div>
+                <div class="info-value" id="os-machine">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Processor</div>
+                <div class="info-value" id="os-processor">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Python Runtime</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Version</div>
+                <div class="info-value" id="python-version">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Implementation</div>
+                <div class="info-value" id="python-impl">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Executable</div>
+                <div class="info-value" id="python-exe">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Storage</div>
+        <div class="info-item">
+            <div class="info-label">Disk Usage</div>
+            <div class="info-value" id="disk-usage">Loading...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="disk-progress"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Network</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Hostname</div>
+                <div class="info-value" id="hostname">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">FQDN</div>
+                <div class="info-value" id="fqdn">Loading...</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <div class="section-title">Server Status</div>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Server Time</div>
+                <div class="info-value" id="server-time">Loading...</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Last Updated</div>
+                <div class="info-value" id="last-update">Never</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="status" id="status">Connecting to server...</div>
+
+    <script>
+        async function loadSystemInfo() {
+            try {
+                const response = await fetch('/api/system');
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                
+                const data = await response.json();
+                
+                // OS Info
+                document.getElementById('os-system').textContent = data.os.system;
+                document.getElementById('os-release').textContent = data.os.release;
+                document.getElementById('os-machine').textContent = data.os.machine;
+                document.getElementById('os-processor').textContent = data.os.processor || 'Unknown';
+                
+                // Python Info
+                document.getElementById('python-version').textContent = data.python.version;
+                document.getElementById('python-impl').textContent = data.python.implementation;
+                document.getElementById('python-exe').textContent = data.python.executable;
+                
+                // Disk Info
+                document.getElementById('disk-usage').textContent = 
+                    `${data.disk.used_gb} GB / ${data.disk.total_gb} GB (${data.disk.percent}%)`;
+                document.getElementById('disk-progress').style.width = `${data.disk.percent}%`;
+                
+                // Network Info
+                document.getElementById('hostname').textContent = data.network.hostname;
+                document.getElementById('fqdn').textContent = data.network.fqdn;
+                
+                // Server Info
+                document.getElementById('server-time').textContent = data.warmbos.server_time;
+                document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+                
+                document.getElementById('status').textContent = 'Connected - Data refreshed';
+                document.getElementById('status').className = 'status';
+                
+            } catch (error) {
+                console.error('Failed to load system info:', error);
+                document.getElementById('status').textContent = `Error: ${error.message}`;
+                document.getElementById('status').className = 'status error';
+            }
+        }
+        
+        // Load on page load
+        loadSystemInfo();
+        
+        // Refresh every 30 seconds 
+        setInterval(loadSystemInfo, 30000);
+    </script>
+</body>
 </html>
