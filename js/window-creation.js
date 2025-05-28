@@ -10,7 +10,6 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
             win.classList.remove('minimized');
             win.style.display = '';
             bringWindowToFront(win);
-            // Do NOT add a new taskbar item here (enforces the rule)
             return;
         }
     }
@@ -37,7 +36,45 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
     if (content.endsWith('.html')) {
         fetch(content)
             .then(r => r.ok ? r.text() : Promise.reject())
-            .then(html => contentElement.innerHTML = html)
+            .then(html => {
+                contentElement.innerHTML = html;
+                
+                // Execute any inline scripts in the loaded content
+                const inlineScripts = contentElement.querySelectorAll('script[type="text/plain"]');
+                inlineScripts.forEach(script => {
+                    try {
+                        const newScript = document.createElement('script');
+                        newScript.textContent = script.textContent;
+                        contentElement.appendChild(newScript);
+                        console.log('Executed inline script for window:', title);
+                    } catch (error) {
+                        console.error('Error executing inline script:', error);
+                    }
+                });
+                
+                // Load and execute external scripts
+                const externalScripts = contentElement.querySelectorAll('script[src][type="text/plain"]');
+                externalScripts.forEach(script => {
+                    const src = script.getAttribute('src');
+                    if (src) {
+                        fetch(src)
+                            .then(response => response.text())
+                            .then(jsCode => {
+                                try {
+                                    const newScript = document.createElement('script');
+                                    newScript.textContent = jsCode;
+                                    contentElement.appendChild(newScript);
+                                    console.log('Executed external script:', src, 'for window:', title);
+                                } catch (error) {
+                                    console.error('Error executing external script:', src, error);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error loading external script:', src, error);
+                            });
+                    }
+                });
+            })
             .catch(() => contentElement.textContent = 'Failed to load content.');
     } else {
         contentElement.textContent = content;
@@ -78,5 +115,3 @@ export function initializeWindowCreation() {
         })
     );
 }
-
-

@@ -2,19 +2,37 @@ import { initializeWindowCreation } from './window-creation.js';
 import { initializeStartMenuToggle } from './start-menu.js';
 import { initializeClock } from './clock.js';
 import { bringWindowToFront } from './window-helpers.js';
+import { loadDesktopState, initializeStateManagement } from './desktop-state.js';
+
+// Load and apply background from settings
+async function loadBackground() {
+    try {
+        const response = await fetch('/settings.json');
+        const settings = await response.json();
+        if (settings.backgroundImage) {
+            const desktop = document.querySelector('.desktop');
+            desktop.style.backgroundImage = `url('${settings.backgroundImage}')`;
+            desktop.style.backgroundSize = 'cover';
+            desktop.style.backgroundPosition = 'center';
+        }
+    } catch (error) {
+        console.log('No custom background set');
+    }
+}
 
 // Load UI components and initialize features
 Promise.all([
-    fetch('../components/taskbar.html').then(r => r.text()).then(html => document.getElementById('taskbar').innerHTML = html),
-    fetch('../components/start-menu.html').then(r => r.text()).then(html => document.getElementById('start-menu').innerHTML = html),
-    fetch('../components/desktop-icons.html').then(r => r.text()).then(html => document.getElementById('desktop-icons').innerHTML = html)
+    fetch('/components/taskbar.html').then(r => r.text()).then(html => document.getElementById('taskbar').innerHTML = html),
+    fetch('/components/start-menu.html').then(r => r.text()).then(html => document.getElementById('start-menu').innerHTML = html),
+    fetch('/components/desktop-icons.html').then(r => r.text()).then(html => document.getElementById('desktop-icons').innerHTML = html)
 ]).then(() => {
     initializeWindowCreation();
     initializeStartMenuToggle();
     initializeClock();
+    loadBackground();
 
     // Load shortcuts and render UI
-    fetch('../shortcuts.json')
+    fetch('/shortcuts.json')
         .then(response => response.json())
         .then(data => {
             let desktopList = [], taskbarList = [], startMenuList = [];
@@ -156,6 +174,10 @@ Promise.all([
                     }
                 });
             }
+
+            // Initialize state management and load saved state
+            initializeStateManagement();
+            loadDesktopState();
         })
         .catch(e => {
             const desktopIconsContainer = document.getElementById('desktop-icons');
@@ -255,10 +277,8 @@ function makeDesktopIconsDraggable(container) {
     addDragHandlers();
     container.addEventListener('dragover', handleDragOver);
     container.addEventListener('drop', handleDrop);
-    window.addEventListener('resize', () => {
-        renderGridAndIcons();
-        addDragHandlers();
-    });
-}
-
-
+        window.addEventListener('resize', () => {
+            renderGridAndIcons();
+            addDragHandlers();
+        });
+    }

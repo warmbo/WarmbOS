@@ -1,268 +1,98 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shortcuts Editor</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; }
-    .section { margin-bottom: 20px; border: 1px solid #ddd; padding: 10px; }
-    .shortcut { margin: 5px 0; padding: 5px; background: #f5f5f5; display: flex; justify-content: space-between; align-items: center; }
-    .shortcut span { flex: 1; }
-    button { margin-left: 5px; }
-    .controls { margin: 10px 0; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-    .modal-content { background: white; padding: 20px; width: 300px; border-radius: 8px; }
-    .form-group { margin-bottom: 10px; }
-    .form-group label { display: block; margin-bottom: 5px; }
-    .form-group input, .form-group select { width: 100%; padding: 5px; }
-    .modal-buttons { display: flex; justify-content: flex-end; margin-top: 10px; }
-  </style>
-</head>
-<body>
-  <h1>Shortcuts Editor</h1>
+<link rel="stylesheet" href="../css/settings.css">
 
-  <div class="controls">
-    <button id="addBtn">Add Shortcut</button>
-    <button id="saveBtn">Save to LocalStorage</button>
-    <button id="loadBtn">Load from LocalStorage</button>
-    <button id="resetBtn">Reset to Default</button>
-  </div>
-
-  <div class="section" id="desktop-section">
-    <h2>Desktop Shortcuts</h2>
-    <div id="desktop-list"></div>
-  </div>
-  <div class="section" id="taskbar-section">
-    <h2>Taskbar Shortcuts</h2>
-    <div id="taskbar-list"></div>
-  </div>
-  <div class="section" id="startMenu-section">
-    <h2>Start Menu Shortcuts</h2>
-    <div id="startMenu-list"></div>
-  </div>
-
-  <div class="modal" id="shortcutModal">
-    <div class="modal-content">
-      <h2 id="modalTitle">Add Shortcut</h2>
-      <div class="form-group">
-        <label for="modalSection">Section:</label>
-        <select id="modalSection">
-          <option value="desktop">Desktop</option>
-          <option value="taskbar">Taskbar</option>
-          <option value="startMenu">Start Menu</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="modalTitleInput">Title:</label>
-        <input type="text" id="modalTitleInput" required />
-      </div>
-      <div class="form-group">
-        <label for="modalIconUrl">Icon URL:</label>
-        <input type="text" id="modalIconUrl" required />
-      </div>
-      <div class="form-group">
-        <label for="modalContentPath">Content Path:</label>
-        <input type="text" id="modalContentPath" required />
-      </div>
-      <div class="modal-buttons">
-        <button id="modalCancelBtn">Cancel</button>
-        <button id="modalSaveBtn">Save</button>
-      </div>
+<div class="settings-container">
+    <div id="statusMessage" class="status-message"></div>
+    
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="preferences">Preferences</button>
+        <button class="tab-btn" data-tab="menu">Menu Editor</button>
     </div>
-  </div>
+    
+    <!-- Preferences Tab -->
+    <div id="preferences-tab" class="tab-content active">
+        <h2>Desktop Preferences</h2>
+        
+        <div class="form-group">
+            <label for="backgroundImage">Background Image URL:</label>
+            <input type="url" id="backgroundImage" placeholder="https://example.com/wallpaper.jpg">
+        </div>
+        
+        <div class="form-group">
+            <label for="theme">Theme:</label>
+            <select id="theme">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="fontSize">Font Size:</label>
+            <select id="fontSize">
+                <option value="12">Small (12px)</option>
+                <option value="14">Medium (14px)</option>
+                <option value="16">Large (16px)</option>
+                <option value="18">Extra Large (18px)</option>
+            </select>
+        </div>
+        
+        <button id="applyPrefsBtn" class="apply-btn">Apply</button>
+    </div>
+    
+    <!-- Menu Editor Tab -->
+    <div id="menu-tab" class="tab-content">
+        <div id="menu-main" class="menu-main">
+            <h2>Menu Editor</h2>
+            
+            <!-- Desktop Shortcuts -->
+            <div class="menu-section">
+                <h3>Desktop Shortcuts</h3>
+                <div id="desktop-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="desktop">+ Add Desktop Shortcut</button>
+            </div>
+            
+            <!-- Taskbar Shortcuts -->
+            <div class="menu-section">
+                <h3>Taskbar Shortcuts</h3>
+                <div id="taskbar-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="taskbar">+ Add Taskbar Shortcut</button>
+            </div>
+            
+            <!-- Start Menu Shortcuts -->
+            <div class="menu-section">
+                <h3>Start Menu Shortcuts</h3>
+                <div id="startMenu-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="startMenu">+ Add Start Menu Shortcut</button>
+            </div>
+            
+            <button id="applyMenuBtn" class="apply-btn">Apply</button>
+        </div>
+        
+        <!-- Edit Shortcut View -->
+        <div id="edit-shortcut" class="edit-shortcut" style="display: none;">
+            <h2 id="editTitle">Edit Shortcut</h2>
+            
+            <div class="form-group">
+                <label for="shortcutTitle">Title:</label>
+                <input type="text" id="shortcutTitle" placeholder="My Application">
+            </div>
+            
+            <div class="form-group">
+                <label for="shortcutUrl">URL/Content Path:</label>
+                <input type="text" id="shortcutUrl" placeholder="/apps/myapp.html or https://example.com">
+            </div>
+            
+            <div class="form-group">
+                <label for="shortcutIcon">Icon URL:</label>
+                <input type="url" id="shortcutIcon" placeholder="https://img.icons8.com/...">
+            </div>
+            
+            <div class="edit-actions">
+                <button id="backBtn" class="btn btn-secondary">Back</button>
+                <button id="saveShortcutBtn" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-  <script>
-    const defaultShortcuts = {
-      desktop: [
-        { title: "My Computer", iconUrl: "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000", contentPath: "/apps/computer.html" },
-        { title: "My Documents", iconUrl: "https://img.icons8.com/?size=100&id=c2AXPLZ3iVEU&format=png&color=000000", contentPath: "#documents" }
-      ],
-      taskbar: [
-        { title: "App Title", iconUrl: "https://img.icons8.com/?size=100&id=TBZPt8cpsUdF&format=png&color=000000", contentPath: "#app1" }
-      ],
-      startMenu: [
-        { title: "My Notes", iconUrl: "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000", contentPath: "#notes" }
-      ]
-    };
-
-    let shortcuts = deepClone(defaultShortcuts);
-    let currentEditSection = null;
-    let currentEditIndex = null;
-
-    const desktopList = document.getElementById('desktop-list');
-    const taskbarList = document.getElementById('taskbar-list');
-    const startMenuList = document.getElementById('startMenu-list');
-    const modal = document.getElementById('shortcutModal');
-    const modalSection = document.getElementById('modalSection');
-    const modalTitleInput = document.getElementById('modalTitleInput');
-    const modalIconUrl = document.getElementById('modalIconUrl');
-    const modalContentPath = document.getElementById('modalContentPath');
-    const modalTitle = document.getElementById('modalTitle');
-    const addBtn = document.getElementById('addBtn');
-    const saveBtn = document.getElementById('saveBtn');
-    const loadBtn = document.getElementById('loadBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const modalCancelBtn = document.getElementById('modalCancelBtn');
-    const modalSaveBtn = document.getElementById('modalSaveBtn');
-
-    function deepClone(obj) {
-      return JSON.parse(JSON.stringify(obj));
-    }
-
-    function init() {
-      loadFromLocalStorage();
-      renderAll();
-    }
-
-    function renderAll() {
-      renderSection('desktop', desktopList);
-      renderSection('taskbar', taskbarList);
-      renderSection('startMenu', startMenuList);
-    }
-
-    function renderSection(section, container) {
-      container.innerHTML = '';
-      shortcuts[section].forEach((shortcut, index) => {
-        const div = document.createElement('div');
-        div.className = 'shortcut';
-        div.innerHTML = `
-          <span>${shortcut.title} (${shortcut.contentPath})</span>
-          <div>
-            <button class="edit-btn" data-section="${section}" data-index="${index}">Edit</button>
-            <button class="delete-btn" data-section="${section}" data-index="${index}">Delete</button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function openModal(section = null, index = null) {
-      currentEditSection = section;
-      currentEditIndex = index;
-
-      if (section !== null && index !== null) {
-        modalTitle.textContent = "Edit Shortcut";
-        const shortcut = shortcuts[section][index];
-        modalSection.value = section;
-        modalTitleInput.value = shortcut.title;
-        modalIconUrl.value = shortcut.iconUrl;
-        modalContentPath.value = shortcut.contentPath;
-      } else {
-        modalTitle.textContent = "Add Shortcut";
-        modalSection.value = 'desktop';
-        modalTitleInput.value = '';
-        modalIconUrl.value = '';
-        modalContentPath.value = '';
-      }
-
-      modal.style.display = 'flex';
-      modalTitleInput.focus();
-    }
-
-    function closeModal() {
-      modal.style.display = 'none';
-    }
-
-    function saveShortcut() {
-      const section = modalSection.value;
-      const newShortcut = {
-        title: modalTitleInput.value.trim(),
-        iconUrl: modalIconUrl.value.trim(),
-        contentPath: modalContentPath.value.trim()
-      };
-
-      if (currentEditSection !== null && currentEditIndex !== null) {
-        // Edit mode
-        if (currentEditSection === section) {
-          shortcuts[section][currentEditIndex] = newShortcut;
-        } else {
-          shortcuts[currentEditSection].splice(currentEditIndex, 1);
-          shortcuts[section].push(newShortcut);
-        }
-      } else {
-        // Add mode
-        shortcuts[section].push(newShortcut);
-      }
-
-      closeModal();
-      renderAll();
-    }
-
-    function deleteShortcut(section, index) {
-      if (confirm('Delete this shortcut?')) {
-        shortcuts[section].splice(index, 1);
-        renderAll();
-      }
-    }
-
-    function saveToLocalStorage() {
-      localStorage.setItem('shortcuts', JSON.stringify(shortcuts));
-      alert('Saved!');
-    }
-
-    function loadFromLocalStorage() {
-      const saved = localStorage.getItem('shortcuts');
-      if (saved) {
-        try {
-          shortcuts = JSON.parse(saved);
-        } catch (e) {
-          console.error('Error parsing saved shortcuts:', e);
-        }
-      }
-    }
-
-    function resetToDefault() {
-      if (confirm('Reset to defaults?')) {
-        shortcuts = deepClone(defaultShortcuts);
-        renderAll();
-      }
-    }
-
-    document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('edit-btn')) {
-        const section = e.target.dataset.section;
-        const index = parseInt(e.target.dataset.index);
-        openModal(section, index);
-      }
-      if (e.target.classList.contains('delete-btn')) {
-        const section = e.target.dataset.section;
-        const index = parseInt(e.target.dataset.index);
-        deleteShortcut(section, index);
-      }
-    });
-
-    addBtn.onclick = () => openModal();
-    saveBtn.onclick = saveToLocalStorage;
-    loadBtn.onclick = () => { loadFromLocalStorage(); renderAll(); };
-    resetBtn.onclick = resetToDefault;
-    modalCancelBtn.onclick = closeModal;
-    modalSaveBtn.onclick = saveShortcut;
-
-    document.addEventListener("DOMContentLoaded", () => {
-  init();
-
-  addBtn.onclick = () => openModal();
-  saveBtn.onclick = saveToLocalStorage;
-  loadBtn.onclick = () => { loadFromLocalStorage(); renderAll(); };
-  resetBtn.onclick = resetToDefault;
-  modalCancelBtn.onclick = closeModal;
-  modalSaveBtn.onclick = saveShortcut;
-
-  document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('edit-btn')) {
-      const section = e.target.dataset.section;
-      const index = parseInt(e.target.dataset.index);
-      openModal(section, index);
-    }
-    if (e.target.classList.contains('delete-btn')) {
-      const section = e.target.dataset.section;
-      const index = parseInt(e.target.dataset.index);
-      deleteShortcut(section, index);
-    }
-  });
-});
-
-  </script>
-</body>
-</html>
+<script type="text/plain" src="../js/settings.js"></script>

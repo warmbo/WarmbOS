@@ -1,0 +1,178 @@
+/* Minimal Settings Editor Styles */
+
+.settings-container {
+    padding: 0;
+    color: var(--text-primary);
+    position: relative;
+    height: 100%;
+}
+
+/* Status Messages */
+.status-message {
+    display: none;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    color: var(--text-primary);
+    font-size: 0.9em;
+}
+
+.tab-btn.active {
+    border-bottom-color: #007cba;
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+    padding-bottom: 60px; /* Space for apply button */
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Apply Button - Fixed Bottom Right */
+.apply-btn {
+    position: fixed;
+    bottom: 15px;
+    right: 15px;
+    padding: 6px 12px;
+    background: #007cba;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    z-index: 100;
+}
+
+.apply-btn:hover {
+    background: #005a87;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.form-group input,
+.form-group select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Buttons */
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 8px;
+}
+
+.btn-primary {
+    background: #007cba;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+/* Menu Editor Views */
+.menu-main {
+    display: block;
+}
+
+.edit-shortcut {
+    display: none;
+    padding: 20px;
+}
+
+.edit-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* Menu Sections */
+.menu-section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.menu-section h3 {
+    color: var(--text-primary);
+}
+
+.shortcuts-list {
+    margin-bottom: 10px;
+}
+
+.shortcut-item {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #eee;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.shortcut-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.shortcut-info {
+    flex: 1;
+}
+
+.shortcut-title {
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.shortcut-url {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.add-shortcut-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed #ccc;
+    background: #f9f9f9;
+}

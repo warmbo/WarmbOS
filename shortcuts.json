@@ -2,8 +2,8 @@
   "desktop": [
     {
       "title": "My Computer",
-      "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
-      "contentPath": "/apps/computer.html"
+      "contentPath": "/apps/computer.html",
+      "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000"
     },
     {
       "title": "My Documents",

@@ -5,8 +5,8 @@
     position: absolute;
     top: 100px;
     left: 100px;
-    width: 440px;
-    height: 300px;
+    width: 640px;
+    height: 520px;
     backdrop-filter: var(--blur);
     z-index: 1;
     box-shadow: var(--shadow-soft);
