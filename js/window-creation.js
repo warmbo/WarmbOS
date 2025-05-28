@@ -44,8 +44,9 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
         iframe.src = content;
         
         // Clear content element and append iframe
-        contentElement.innerHTML = '';
-        contentElement.appendChild(iframe);
+        const windowContent = windowClone.querySelector('.window-content');
+        windowContent.innerHTML = '';
+        windowContent.appendChild(iframe);
     } else if (content.endsWith('.html')) {
         // Local HTML file
         fetch(content)
