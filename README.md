@@ -1,6 +1,18 @@
-# warmbos-dev
+# WarmbOS
 
-A minimal web-based desktop environment for demonstration and development purposes.
+A minimal web-based desktop environment for use as a startpage, homelab management dashboard, or just to use as a fun playground on your network. The project is meant to be modular and theme-able and should let users find a diverse range of use from it.
+
+## Screenshots
+
+![Desktop](https://i.imgur.com/DGt8bmp.png)
+Desktop
+
+![Settings Menus](https://i.imgur.com/S3sANat.png)
+Settings
+
+![System Info](https://i.imgur.com/Kag3olD.png)
+System Info
+
 
 ## Features
 
@@ -26,8 +38,8 @@ A minimal web-based desktop environment for demonstration and development purpos
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/<your-username>/warmbos-dev.git
-    cd warmbos-dev
+    git clone https://github.com/warmbo/WarmbOS.git
+    cd warmbos
     ```
 2.  **Run the installation script:** This script installs the necessary dependencies and sets up a systemd service (requires root privileges):
     ```bash

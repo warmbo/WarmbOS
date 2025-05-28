@@ -14,11 +14,6 @@
       "title": "My Notes",
       "iconUrl": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
       "contentPath": "/apps/notes.html"
-    },
-    {
-      "title": "pve-geminar",
-      "contentPath": "https://pve-geminar.warho.me",
-      "iconUrl": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/proxmox.png"
     }
   ],
   "taskbar": [],
