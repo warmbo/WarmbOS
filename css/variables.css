@@ -1,5 +1,6 @@
 :root {
-    --bg-primary: #326ddb;
+    --bg-primary: #cad2e0;
+    --theme-icons: rgba(255, 255, 255, 0.225);
     --window-bg: rgba(20, 20, 20, 0.75);
     --button-color: rgba(20, 20, 20, 0.5);
     --bg-img: url('') no-repeat;
