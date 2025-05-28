@@ -321,3 +321,20 @@ export function removeTaskbarItem(windowEl) {
         delete item.dataset.bound;
     }
 }
+
+export function destroyWindow(windowEl) {
+    // Remove all event listeners
+    const listeners = windowEl._eventListeners || [];
+    listeners.forEach(({element, event, handler}) => {
+        element.removeEventListener(event, handler);
+    });
+    // Remove from DOM
+    windowEl.remove();
+}
+
+// Track listeners for cleanup
+function addTrackedListener(element, event, handler, windowEl) {
+    element.addEventListener(event, handler);
+    if (!windowEl._eventListeners) windowEl._eventListeners = [];
+    windowEl._eventListeners.push({element, event, handler});
+}

@@ -1,3 +1,15 @@
 @import url('./css/base.css');
 @import url('./css/layout.css');
 @import url('./css/components.css');
+
+/* Soft white drop-shadow for all icons everywhere */
+.icon img,
+.start-menu-item img,
+.taskbar-item img,
+.window-title img,
+.window-title-bar img,
+.window img,
+button img,
+a img {
+    filter: drop-shadow(0 2px 6px rgba(255,255,255,0.85));
+}

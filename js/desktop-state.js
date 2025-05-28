@@ -1,7 +1,11 @@
 // Desktop State Management
 // Saves and restores window positions and open applications
 
+import { debounce } from './utils.js';
+
 const DESKTOP_STATE_KEY = 'warmbos-desktop-state';
+
+const debouncedSave = debounce(saveDesktopState, 1000);
 
 export function saveDesktopState() {
     const state = {
@@ -230,11 +234,8 @@ export function clearDesktopState() {
 // Auto-save state when windows change
 export function initializeStateManagement() {
     // Save state when windows are moved, resized, minimized, etc.
-    let saveTimeout;
-    
     function scheduleStateSave() {
-        clearTimeout(saveTimeout);
-        saveTimeout = setTimeout(saveDesktopState, 1000); // Debounce saves
+        debouncedSave();
     }
     
     // Observer for window changes
@@ -286,4 +287,75 @@ export function initializeStateManagement() {
     setInterval(saveDesktopState, 30000); // Every 30 seconds
     
     console.log('Desktop state management initialized');
+}
+
+class StateManager {
+    constructor() {
+        this.storageKey = 'warmbos-desktop-state';
+        this.maxRetries = 3;
+    }
+    
+    async save(state) {
+        const serialized = JSON.stringify({
+            ...state,
+            timestamp: Date.now(),
+            version: '1.0'
+        });
+        
+        for (let i = 0; i < this.maxRetries; i++) {
+            try {
+                localStorage.setItem(this.storageKey, serialized);
+                return true;
+            } catch (error) {
+                if (error.name === 'QuotaExceededError') {
+                    this.cleanup();
+                } else {
+                    console.error('State save failed:', error);
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
+    load() {
+        try {
+            const data = localStorage.getItem(this.storageKey);
+            if (!data) return null;
+            
+            const state = JSON.parse(data);
+            if (!this.validateState(state)) {
+                console.warn('Invalid state detected, clearing');
+                this.clear();
+                return null;
+            }
+            
+            return state;
+        } catch (error) {
+            console.error('State load failed:', error);
+            this.clear();
+            return null;
+        }
+    }
+    
+    validateState(state) {
+        return state && 
+               typeof state.timestamp === 'number' &&
+               Array.isArray(state.openWindows) &&
+               state.version === '1.0';
+    }
+    
+    clear() {
+        try {
+            localStorage.removeItem(this.storageKey);
+            console.log('Desktop state cleared');
+        } catch (error) {
+            console.error('Failed to clear desktop state:', error);
+        }
+    }
+    
+    cleanup() {
+        // Optionally implement cleanup logic, e.g., remove old keys or reduce state size
+        this.clear();
+    }
 }

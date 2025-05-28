@@ -6,6 +6,7 @@ Minimal Flask backend for warmbos-dev web desktop.
 from flask import Flask, send_from_directory, jsonify, request
 import json
 import os
+from pathlib import Path
 
 app = Flask(__name__, static_folder='.')
 
@@ -35,13 +36,24 @@ def get_settings():
 def save_settings():
     try:
         data = request.get_json()
-        print(f"Received settings data: {data}")  # Debug print
-        with open('settings.json', 'w') as f:
+        if not data:
+            return jsonify({"error": "No data provided"}), 400
+        # Validate structure
+        allowed_keys = {'backgroundImage', 'preferences'}
+        if not all(key in allowed_keys for key in data.keys()):
+            return jsonify({"error": "Invalid settings structure"}), 400
+        # Validate URL format for backgroundImage
+        if 'backgroundImage' in data:
+            url = data['backgroundImage']
+            if url and not (url.startswith('http://') or url.startswith('https://')):
+                return jsonify({"error": "Invalid background image URL"}), 400
+        # Atomic write
+        temp_file = Path('settings.json.tmp')
+        with temp_file.open('w') as f:
             json.dump(data, f, indent=2)
-        print("Settings saved successfully")  # Debug print
+        temp_file.rename('settings.json')
         return jsonify({"success": True})
     except Exception as e:
-        print(f"Error saving settings: {e}")  # Debug print
         return jsonify({"error": str(e)}), 500
 
 @app.route('/<path:filename>')

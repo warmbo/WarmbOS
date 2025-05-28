@@ -429,3 +429,16 @@
 #desktop-icons .grid-highlight.active {
     display: block;
 }
+
+
+
+.icon img,
+.start-menu-item img,
+.taskbar-item img,
+.window-title img,
+.window-title-bar img,
+.window img,
+button img,
+a img {
+    filter: drop-shadow(0 0 1px 1px rgba(255,255,255,0.45));
+}

@@ -20,12 +20,56 @@ async function loadBackground() {
     }
 }
 
+async function loadComponents() {
+    const components = [
+        {name: 'taskbar', url: '/components/taskbar.html', target: '#taskbar'},
+        {name: 'start-menu', url: '/components/start-menu.html', target: '#start-menu'}
+    ];
+    
+    const results = await Promise.allSettled(
+        components.map(async comp => {
+            try {
+                const response = await fetch(comp.url);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                const html = await response.text();
+                document.querySelector(comp.target).innerHTML = html;
+                return {success: true, component: comp.name};
+            } catch (error) {
+                console.error(`Failed to load ${comp.name}:`, error);
+                return {success: false, component: comp.name, error};
+            }
+        })
+    );
+    
+    // Handle partial failures gracefully
+    const failed = results.filter(r => !r.value?.success);
+    if (failed.length > 0) {
+        showErrorMessage(`Some components failed to load: ${failed.map(f => f.value.component).join(', ')}`);
+    }
+}
+
+function showErrorMessage(msg) {
+    let el = document.getElementById('component-load-error');
+    if (!el) {
+        el = document.createElement('div');
+        el.id = 'component-load-error';
+        el.style.position = 'fixed';
+        el.style.top = '10px';
+        el.style.left = '50%';
+        el.style.transform = 'translateX(-50%)';
+        el.style.background = '#f44336';
+        el.style.color = '#fff';
+        el.style.padding = '10px 20px';
+        el.style.borderRadius = '6px';
+        el.style.zIndex = 99999;
+        document.body.appendChild(el);
+    }
+    el.textContent = msg;
+    setTimeout(() => { el.remove(); }, 5000);
+}
+
 // Load UI components and initialize features
-Promise.all([
-    fetch('/components/taskbar.html').then(r => r.text()).then(html => document.getElementById('taskbar').innerHTML = html),
-    fetch('/components/start-menu.html').then(r => r.text()).then(html => document.getElementById('start-menu').innerHTML = html),
-    fetch('/components/desktop-icons.html').then(r => r.text()).then(html => document.getElementById('desktop-icons').innerHTML = html)
-]).then(() => {
+loadComponents().then(() => {
     initializeWindowCreation();
     initializeStartMenuToggle();
     initializeClock();
