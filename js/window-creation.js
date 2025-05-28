@@ -100,15 +100,21 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
 
     // Wait for DOM to update
     requestAnimationFrame(() => {
-        // Use the windowId to select the correct window
         const windowEl = document.querySelector(`.desktop .window[data-window-id]${windowClone.querySelector('.window') ? `[data-window-id='${windowClone.querySelector('.window').dataset.windowId}']` : ':last-of-type'}`);
         if (!windowEl) return console.error('[createWindow] Failed to find newly inserted window');
         console.log("[createWindow] Window added to DOM");
 
+        // Add opening animation
+        windowEl.classList.add('opening');
+        // Remove opening animation class after animation completes
+        setTimeout(() => {
+            windowEl.classList.remove('opening');
+        }, 300);
+
         bringWindowToFront(windowEl);
         makeWindowDraggable(windowEl);
         addWindowControls(windowEl);
-        // Only add a taskbar item if not skipping (i.e., not a static open-window button)
+        
         if (!skipTaskbar) {
             const iconImg = windowEl.querySelector('.window-title img');
             const iconUrlFinal = iconImg ? iconImg.src : '';

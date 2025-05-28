@@ -82,7 +82,7 @@ function showEditShortcut() {
 
 async function loadSettings() {
     try {
-        const response = await fetch('/settings.json');
+        const response = await fetch('../settings.json');
         
         if (response.ok) {
             currentSettings = await response.json();
@@ -95,7 +95,7 @@ async function loadSettings() {
 
 async function loadShortcuts() {
     try {
-        const response = await fetch('/shortcuts.json');
+        const response = await fetch('../shortcuts.json');
         
         if (response.ok) {
             currentShortcuts = await response.json();
@@ -244,14 +244,20 @@ function saveShortcut() {
 
 async function applyPreferences() {
     try {
+        const backgroundImage = document.getElementById('backgroundImage').value.trim();
+        const theme = document.getElementById('theme').value;
+        const fontSize = parseInt(document.getElementById('fontSize').value);
+        
         const settings = {
-            backgroundImage: document.getElementById('backgroundImage').value,
+            backgroundImage: backgroundImage || '',
             preferences: {
-                theme: document.getElementById('theme').value,
-                fontSize: parseInt(document.getElementById('fontSize').value),
+                theme: theme || 'dark',
+                fontSize: fontSize || 14,
                 language: currentSettings.preferences?.language || 'en-US'
             }
         };
+        
+        console.log('Sending settings:', settings); // Debug log
         
         const response = await fetch('/settings.json', {
             method: 'POST',
@@ -259,10 +265,12 @@ async function applyPreferences() {
             body: JSON.stringify(settings)
         });
         
+        const result = await response.json();
+        
         if (response.ok) {
             currentSettings = settings;
             
-            // Try to apply background immediately
+            // Apply background immediately
             const bgValue = settings.backgroundImage;
             if (bgValue) {
                 try {
@@ -275,12 +283,12 @@ async function applyPreferences() {
                     }
                     
                     if (desktop) {
-                        desktop.style.backgroundImage = 'url("' + bgValue + '")';
+                        desktop.style.backgroundImage = `url("${bgValue}")`;
                         desktop.style.backgroundSize = 'cover';
                         desktop.style.backgroundPosition = 'center';
                     }
                 } catch (error) {
-                    // Silent fail - background will change on refresh
+                    console.warn('Could not apply background immediately:', error);
                 }
             }
             
@@ -289,9 +297,11 @@ async function applyPreferences() {
                 window.location.reload();
             }, 500);
         } else {
-            throw new Error('Apply failed');
+            console.error('Server error:', result);
+            showMessage(`Failed to apply preferences: ${result.error || 'Unknown error'}`, 'error');
         }
     } catch (error) {
+        console.error('Apply preferences error:', error);
         showMessage('Failed to apply preferences', 'error');
     }
 }

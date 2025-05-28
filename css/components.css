@@ -282,6 +282,8 @@
     box-shadow: var(--shadow-soft);
     border-radius: 4px;
     box-sizing: border-box;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
 }
 
 .window.maximized {
@@ -477,4 +479,91 @@ a img {
         drop-shadow(-1px -1px 0px var(--theme-icons))
         drop-shadow(1px -1px 0px var(--theme-icons))
         drop-shadow(-1px 1px 0px var(--theme-icons));
+}
+
+/* Window animations */
+.window {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center;
+}
+
+/* Window opening animation */
+.window.opening {
+    animation: windowOpen 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes windowOpen {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Window closing animation */
+.window.closing {
+    animation: windowClose 0.25s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    pointer-events: none;
+}
+
+@keyframes windowClose {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) translateY(-20px);
+    }
+}
+
+/* Window minimize animation */
+.window.minimizing {
+    animation: windowMinimize 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    pointer-events: none;
+}
+
+@keyframes windowMinimize {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.1) translateY(100px);
+    }
+}
+
+/* Window restore animation */
+.window.restoring {
+    animation: windowRestore 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes windowRestore {
+    0% {
+        opacity: 0;
+        transform: scale(0.1) translateY(100px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Maximize/restore animations */
+.window.maximizing {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.window.restoring-size {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Prevent animations during drag */
+.window.dragging {
+    transition: none !important;
+    animation: none !important;
 }

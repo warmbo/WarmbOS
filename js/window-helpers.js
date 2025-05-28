@@ -18,13 +18,15 @@ export function makeWindowDraggable(el) {
     let moved = false;
 
     bar.addEventListener('mousedown', e => {
-        if (e.target.closest('.window-title-button')) return; // Ignore titlebar buttons
-        if (isWindowMaximized(el)) return; // Prevent drag if maximized
+        if (e.target.closest('.window-title-button')) return;
+        if (isWindowMaximized(el)) return;
         drag = true;
         moved = false;
         offsetX = e.clientX - el.offsetLeft;
         offsetY = e.clientY - el.offsetTop;
         el.style.zIndex = 1000;
+        // Disable animations during drag
+        el.classList.add('dragging');
         addDragGuard();
     });
 
@@ -40,6 +42,8 @@ export function makeWindowDraggable(el) {
             console.log("[drag] Mouseup with no movement — likely a click.");
         }
         drag = false;
+        // Re-enable animations after drag
+        el.classList.remove('dragging');
         removeDragGuard();
     });
 
@@ -137,65 +141,64 @@ export function removeDragGuard() {
 }
 
 export function addWindowControls(el) {
-    ['click', 'mousedown', 'mouseup'].forEach(eventName => {
-        el.querySelector('.minimize-button')?.addEventListener(eventName, e => {
-            console.log(`[${eventName}] Minimize fired`, e.target);
-        });
-        el.querySelector('.maximize-button')?.addEventListener(eventName, e => {
-            console.log(`[${eventName}] Maximize fired`, e.target);
-        });
-        el.querySelector('.close-button')?.addEventListener(eventName, e => {
-            console.log(`[${eventName}] Close fired`, e.target);
-        });
-    });
-
-    console.log("[addWindowControls] Binding buttons for window", el);
-
     const minimizeBtn = el.querySelector('.minimize-button');
     const maximizeBtn = el.querySelector('.maximize-button');
     const closeBtn = el.querySelector('.close-button');
 
     minimizeBtn?.addEventListener('click', () => {
         console.log("[minimize] Clicked");
-        el.classList.add('minimized');
-        el.style.display = 'none';
-        const iconImg = el.querySelector('.window-title img');
-        const iconUrl = iconImg ? iconImg.src : '';
-        const title = el.querySelector('.window-title-text').textContent;
-        // Ensure the window has a unique id for taskbar tracking
-        if (!el.dataset.windowId) {
-            el.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
-        }
-        addTaskbarItem(title, el, iconUrl);
+        // Add minimize animation
+        el.classList.add('minimizing');
+        setTimeout(() => {
+            el.classList.remove('minimizing');
+            el.classList.add('minimized');
+            el.style.display = 'none';
+            const iconImg = el.querySelector('.window-title img');
+            const iconUrl = iconImg ? iconImg.src : '';
+            const title = el.querySelector('.window-title-text').textContent;
+            if (!el.dataset.windowId) {
+                el.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
+            }
+            addTaskbarItem(title, el, iconUrl);
+        }, 300);
     });
 
     maximizeBtn?.addEventListener('click', () => {
         console.log("[maximize] Clicked");
-        
-        // Use our helper function to detect maximized state
         if (isWindowMaximized(el)) {
             // Restore window
-            Object.assign(el.style, { width: '', height: '', left: '', top: '' });
-            el.classList.remove('maximized');
-            console.log("[maximize] Window restored to normal size");
+            el.classList.add('restoring-size');
+            setTimeout(() => {
+                Object.assign(el.style, { width: '', height: '', left: '', top: '' });
+                el.classList.remove('maximized', 'restoring-size');
+                console.log("[maximize] Window restored to normal size");
+            }, 50);
         } else {
             // Maximize window
-            const taskbarHeight = document.getElementById('taskbar')?.offsetHeight || 0;
-            Object.assign(el.style, {
-                width: '100%',
-                height: `calc(100% - ${taskbarHeight}px)`,
-                left: '0',
-                top: '0'
-            });
-            el.classList.add('maximized');
-            console.log("[maximize] Window maximized");
+            el.classList.add('maximizing');
+            setTimeout(() => {
+                const taskbarHeight = document.getElementById('taskbar')?.offsetHeight || 0;
+                Object.assign(el.style, {
+                    width: '100%',
+                    height: `calc(100% - ${taskbarHeight}px)`,
+                    left: '0',
+                    top: '0'
+                });
+                el.classList.add('maximized');
+                el.classList.remove('maximizing');
+                console.log("[maximize] Window maximized");
+            }, 50);
         }
     });
 
     closeBtn?.addEventListener('click', () => {
         console.log("[close] Clicked");
-        removeTaskbarItem(el);
-        el.remove();
+        // Add close animation
+        el.classList.add('closing');
+        setTimeout(() => {
+            removeTaskbarItem(el);
+            el.remove();
+        }, 250);
     });
 
     el.addEventListener('mousedown', (e) => {
@@ -227,65 +230,47 @@ export function addTaskbarItem(title, windowEl, iconUrl) {
         return item.textContent.trim() === title.trim();
     });
     if (staticOpenWindow) {
-        // Bind this static item to the window if not already bound
         staticOpenWindow.dataset.windowId = windowEl.dataset.windowId;
         if (!staticOpenWindow.dataset.bound) {
             staticOpenWindow.addEventListener('click', () => {
-                windowEl.classList.remove('minimized');
-                windowEl.style.display = '';
-                bringWindowToFront(windowEl);
+                restoreWindow(windowEl);
             });
             staticOpenWindow.dataset.bound = 'true';
         }
         return;
     }
-
-    // First, check for an existing taskbar item with the same windowId
     const existingById = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
     if (existingById) {
-        // If the item already exists with matching windowId, ensure it is bound to the window
         if (!existingById.dataset.bound) {
             existingById.addEventListener('click', () => {
-                windowEl.classList.remove('minimized');
-                windowEl.style.display = '';
-                bringWindowToFront(windowEl);
+                restoreWindow(windowEl);
             });
             existingById.dataset.bound = 'true';
         }
-        return; // Exit to prevent duplication
+        return;
     }
-
-    // Check for existing static taskbar item with matching title/text content
     const existingByTitle = Array.from(taskbar.querySelectorAll('.taskbar-item')).find(item => {
         const itemText = item.textContent.trim();
         return itemText === title.trim() && item.dataset.static === 'true';
     });
-
     if (existingByTitle) {
-        // Assign windowId to window if missing
         if (!windowEl.dataset.windowId) {
             windowEl.dataset.windowId = 'w_' + Math.random().toString(36).slice(2, 10);
         }
-        // Reuse the existing static item - bind it to this window
         existingByTitle.dataset.windowId = windowEl.dataset.windowId;
         existingByTitle.dataset.bound = 'true';
-
-        // Remove all previous click listeners by replacing with a fresh handler
         existingByTitle.replaceWith(existingByTitle.cloneNode(true));
         const updatedItem = taskbar.querySelector(`[data-window-id='${windowEl.dataset.windowId}']`);
         if (updatedItem) {
             updatedItem.dataset.static = 'true';
             updatedItem.dataset.bound = 'true';
             updatedItem.addEventListener('click', () => {
-                windowEl.classList.remove('minimized');
-                windowEl.style.display = '';
-                bringWindowToFront(windowEl);
+                restoreWindow(windowEl);
             });
         }
         return;
     }
-
-    // Create a new taskbar item if none exists (neither by ID nor by title)
+    // Create new taskbar item
     const item = document.createElement('button');
     item.className = 'taskbar-item';
     item.dataset.windowId = windowEl.dataset.windowId;
@@ -299,11 +284,20 @@ export function addTaskbarItem(title, windowEl, iconUrl) {
     }
     item.appendChild(document.createTextNode(title));
     item.addEventListener('click', () => {
-        windowEl.classList.remove('minimized');
-        windowEl.style.display = '';
-        bringWindowToFront(windowEl);
+        restoreWindow(windowEl);
     });
     taskbar.appendChild(item);
+}
+
+// New function to handle animated restore
+function restoreWindow(windowEl) {
+    windowEl.classList.remove('minimized');
+    windowEl.classList.add('restoring');
+    windowEl.style.display = '';
+    setTimeout(() => {
+        windowEl.classList.remove('restoring');
+        bringWindowToFront(windowEl);
+    }, 300);
 }
 
 export function removeTaskbarItem(windowEl) {
