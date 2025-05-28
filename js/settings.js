@@ -87,7 +87,6 @@ async function loadSettings() {
         if (response.ok) {
             currentSettings = await response.json();
             populatePreferencesForm();
-            showMessage('Settings loaded', 'success');
         }
     } catch (error) {
         showMessage('Failed to load settings', 'error');

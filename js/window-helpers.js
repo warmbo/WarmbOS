@@ -19,7 +19,7 @@ export function makeWindowDraggable(el) {
 
     bar.addEventListener('mousedown', e => {
         if (e.target.closest('.window-title-button')) return; // Ignore titlebar buttons
-        if (el.classList.contains('maximized')) return; // Prevent drag if maximized
+        if (isWindowMaximized(el)) return; // Prevent drag if maximized
         drag = true;
         moved = false;
         offsetX = e.clientX - el.offsetLeft;
@@ -44,6 +44,25 @@ export function makeWindowDraggable(el) {
     });
 
     addResizeHandles(el);
+}
+
+// Helper function to detect if window is maximized by checking both class and styles
+function isWindowMaximized(el) {
+    if (el.classList.contains('maximized')) {
+        return true;
+    }
+    
+    // Check if window has maximized-like styles (after browser refresh)
+    const style = el.style;
+    const taskbarHeight = document.getElementById('taskbar')?.offsetHeight || 40;
+    const expectedHeight = `calc(100% - ${taskbarHeight}px)`;
+    
+    return (
+        style.width === '100%' && 
+        (style.height === expectedHeight || style.height === `calc(100% - ${taskbarHeight}px)`) &&
+        style.left === '0px' && 
+        style.top === '0px'
+    );
 }
 
 export function addResizeHandles(el) {
@@ -152,10 +171,15 @@ export function addWindowControls(el) {
 
     maximizeBtn?.addEventListener('click', () => {
         console.log("[maximize] Clicked");
-        if (el.classList.contains('maximized')) {
+        
+        // Use our helper function to detect maximized state
+        if (isWindowMaximized(el)) {
+            // Restore window
             Object.assign(el.style, { width: '', height: '', left: '', top: '' });
             el.classList.remove('maximized');
+            console.log("[maximize] Window restored to normal size");
         } else {
+            // Maximize window
             const taskbarHeight = document.getElementById('taskbar')?.offsetHeight || 0;
             Object.assign(el.style, {
                 width: '100%',
@@ -164,6 +188,7 @@ export function addWindowControls(el) {
                 top: '0'
             });
             el.classList.add('maximized');
+            console.log("[maximize] Window maximized");
         }
     });
 
@@ -296,5 +321,3 @@ export function removeTaskbarItem(windowEl) {
         delete item.dataset.bound;
     }
 }
-
-

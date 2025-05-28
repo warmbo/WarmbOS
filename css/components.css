@@ -1,5 +1,6 @@
 @import url('./variables.css');
 
+/* --- Taskbar Components --- */
 .taskbar-item, .app-item, .system-item {
     display: flex;
     align-items: center;
@@ -166,6 +167,47 @@
     line-height: 1.2em;
 }
 
+/* --- Desktop Icons --- */
+#desktop-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 98px);
+    grid-auto-rows: 116px;
+    gap: 8px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-content: start;
+    padding: 8px;
+}
+
+.grid-cell {
+    width: 90px;
+    height: 108px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-cell.occupied {
+    border-radius: 4px;
+}
+
+#desktop-icons a.open-window {
+    display: inline-block;
+    max-width: 90px;
+    height: 108px;
+    text-decoration: none;
+    cursor: grab;
+    width: 90px;
+    margin: 0;
+}
+
+#desktop-icons a.open-window:active {
+    cursor: grabbing;
+}
+
 .icon {
     border-radius: 4px;
     display: inline-block;
@@ -182,30 +224,15 @@
     box-sizing: border-box;
 }
 
-#desktop-icons .icon.dragging {
-    opacity: 0.5;
-    z-index: 10000;
-    box-shadow: 0 0 10px #0008;
-}
-
-#desktop-icons .icon.placeholder {
-    border: 2px dashed #fff8;
-    background: rgba(255,255,255,0.07);
-    opacity: 0.7;
-    min-width: 90px;
-    min-height: 108px;
-}
-
-.icon.dragging {
-    opacity: 0.5;
-    z-index: 10000;
-    box-shadow: 0 0 10px #0008;
-}
-
-.icon.placeholder {
-    border: 2px dashed #fff8;
-    background: rgba(255,255,255,0.07);
-    opacity: 0.7;
+.icon img {
+    display: flex;
+    flex: 1;
+    margin: 0 auto;
+    border-radius: 4px;
+    width: 48px;
+    height: 48px;
+    user-select: none;
+    pointer-events: none;
 }
 
 .icon span {
@@ -229,22 +256,27 @@
     background: rgba(0,0,0,0.3);
 }
 
-.icon img {
-    display: flex;
-    flex: 1;
-    margin: 0 auto;
-    border-radius: 4px;
-    width: 48px;
-    height: 48px;
+#desktop-icons .icon.dragging {
+    opacity: 0.5;
+    z-index: 10000;
+    box-shadow: 0 0 10px #0008;
 }
 
-/* --- Window --- */
+#desktop-icons .icon.placeholder {
+    border: 2px dashed #fff8;
+    background: rgba(255,255,255,0.07);
+    opacity: 0.7;
+    min-width: 90px;
+    min-height: 108px;
+}
+
+/* --- Windows --- */
 .window {
     position: absolute;
     top: 100px;
     left: 100px;
-    width: 440px;
-    height: 300px;
+    width: 640px;
+    height: 520px;
     backdrop-filter: var(--blur);
     z-index: 1;
     box-shadow: var(--shadow-soft);
@@ -275,7 +307,6 @@
     font-size: .875em;
     user-select: none;
     height: 32px;
-    
 }
 
 .window-title {
@@ -303,7 +334,6 @@
     background: var(--button-color);
     transition: var(--transition);
     vertical-align: bottom;
-    
 }
 
 .window-title-button img {
@@ -336,35 +366,55 @@
     overflow: auto;
 }
 
-/* Resize handles for window resizing */
+/* --- Window Resize Handles --- */
 .resize-handle {
-  background: transparent;
-  position: absolute;
-  z-index: 1001;
+    background: transparent;
+    position: absolute;
+    z-index: 1001;
 }
+
 .resize-right {
-  right: 0; top: 0; width: 8px; height: 100%; cursor: ew-resize;
+    right: 0; 
+    top: 0; 
+    width: 8px; 
+    height: 100%; 
+    cursor: ew-resize;
 }
+
 .resize-bottom {
-  left: 0; bottom: 0; width: 100%; height: 8px; cursor: ns-resize;
+    left: 0; 
+    bottom: 0; 
+    width: 100%; 
+    height: 8px; 
+    cursor: ns-resize;
 }
+
 .resize-corner {
-  right: 0; bottom: 0; width: 16px; height: 16px; cursor: nwse-resize;
+    right: 0; 
+    bottom: 0; 
+    width: 16px; 
+    height: 16px; 
+    cursor: nwse-resize;
 }
+
 #drag-guard {
-  position: fixed;
-  left: 0; top: 0; width: 100vw; height: 100vh;
-  z-index: 9999;
-  background: transparent;
-  cursor: default;
+    position: fixed;
+    left: 0; 
+    top: 0; 
+    width: 100vw; 
+    height: 100vh;
+    z-index: 9999;
+    background: transparent;
+    cursor: default;
 }
 
 .window.active-window {
-  outline: none;
-  box-shadow: none;
-  z-index: inherit;
+    outline: none;
+    box-shadow: none;
+    z-index: inherit;
 }
 
+/* --- Grid Highlight --- */
 #desktop-icons .grid-highlight {
     position: absolute;
     width: 90px;

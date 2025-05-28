@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Black Notepad</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      background-color: black;
+      color: white;
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+    }
+    #sidebar {
+      width: 25%;
+      background: #18181b;
+      padding: 8px;
+      border-right: 1px solid #27272a;
+      display: flex;
+      flex-direction: column;
+    }
+    #sidebar h2 {
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    #note-list {
+      flex-grow: 1;
+      overflow-y: auto;
+    }
+    .note-item {
+      padding: 4px;
+      border-radius: 4px;
+      margin-bottom: 4px;
+      background: #27272a;
+      cursor: pointer;
+    }
+    .note-item.active {
+      background: #3f3f46;
+    }
+    .note-item span {
+      display: inline-block;
+      width: calc(100% - 20px);
+    }
+    .note-item button {
+      background: none;
+      border: none;
+      color: red;
+      float: right;
+      cursor: pointer;
+    }
+    #main {
+      width: 75%;
+      padding: 8px;
+      display: flex;
+      flex-direction: column;
+    }
+    input, textarea {
+      background: #18181b;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      margin-bottom: 6px;
+      padding: 6px;
+      font-size: 0.9rem;
+    }
+    textarea {
+      flex-grow: 1;
+      resize: none;
+    }
+    button.add-btn {
+      background: #3f3f46;
+      border: none;
+      color: white;
+      border-radius: 4px;
+      padding: 4px 8px;
+      cursor: pointer;
+      margin-bottom: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar to list and add notes -->
+  <div id="sidebar">
+    <h2>My Notes</h2>
+    <button class="add-btn" onclick="addNote()">+ Add Note</button>
+    <div id="note-list"></div>
+  </div>
+
+  <!-- Main panel for editing selected note -->
+  <div id="main">
+    <input type="text" id="note-title" placeholder="Note title..." oninput="updateNote('title', this.value)" />
+    <textarea id="note-content" placeholder="Write your note here..." oninput="updateNote('content', this.value)"></textarea>
+  </div>
+
+  <script>
+    // Load notes from localStorage, or create an initial note if empty
+    let notes = JSON.parse(localStorage.getItem('notes')) || [
+      { id: Date.now(), title: "First Note", content: "Start typing..." }
+    ];
+
+    // Set the first note as the active one initially
+    let activeNoteId = notes[0]?.id || null;
+
+    // Save current notes array to localStorage
+    function saveNotes() {
+      localStorage.setItem('notes', JSON.stringify(notes));
+    }
+
+    // Render all notes in the sidebar
+    function renderNotes() {
+      const list = document.getElementById('note-list');
+      list.innerHTML = '';
+
+      notes.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'note-item' + (note.id === activeNoteId ? ' active' : '');
+        item.onclick = () => setActiveNote(note.id);
+
+        // Render title and delete button for each note
+        item.innerHTML = `<span>${note.title}</span><button onclick="deleteNote(${note.id}); event.stopPropagation();">x</button>`;
+
+        list.appendChild(item);
+      });
+    }
+
+    // Make a note active and populate the main editor with its content
+    function setActiveNote(id) {
+      activeNoteId = id;
+      const note = notes.find(n => n.id === id);
+      if (note) {
+        document.getElementById('note-title').value = note.title;
+        document.getElementById('note-content').value = note.content;
+      }
+      renderNotes();
+    }
+
+    // Update the current note's title or content
+    function updateNote(field, value) {
+      const note = notes.find(n => n.id === activeNoteId);
+      if (note) {
+        note[field] = value;
+        saveNotes();
+        renderNotes(); // Update sidebar title if changed
+      }
+    }
+
+    // Add a new blank note and make it active
+    function addNote() {
+      const newNote = { id: Date.now(), title: "Untitled Note", content: "" };
+      notes.push(newNote);
+      activeNoteId = newNote.id;
+      saveNotes();
+      setActiveNote(activeNoteId);
+    }
+
+    // Delete the note by ID and update state
+    function deleteNote(id) {
+      notes = notes.filter(note => note.id !== id);
+      if (notes.length > 0) {
+        activeNoteId = notes[0].id;
+      } else {
+        activeNoteId = null;
+        document.getElementById('note-title').value = '';
+        document.getElementById('note-content').value = '';
+      }
+      saveNotes();
+      renderNotes();
+      if (activeNoteId) setActiveNote(activeNoteId);
+    }
+
+    // Initialize the UI on load
+    renderNotes();
+    if (activeNoteId) setActiveNote(activeNoteId);
+  </script>
+</body>
+</html>

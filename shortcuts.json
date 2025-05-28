@@ -13,31 +13,20 @@
     {
       "title": "My Notes",
       "iconUrl": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
-      "contentPath": "#notes"
-    }
-  ],
-  "taskbar": [
-    {
-      "title": "App Title",
-      "iconUrl": "https://img.icons8.com/?size=100&id=TBZPt8cpsUdF&format=png&color=000000",
-      "contentPath": "#app1"
+      "contentPath": "/apps/notes.html"
     },
     {
-      "title": "App Title 2",
-      "iconUrl": "https://img.icons8.com/?size=100&id=A6NzpssBf9Xg&format=png&color=000000",
-      "contentPath": "#app2"
-    },
-    {
-      "title": "Another App",
-      "iconUrl": "https://img.icons8.com/?size=100&id=a2NqBaHEmUuh&format=png&color=000000",
-      "contentPath": "#app3"
+      "title": "pve-geminar",
+      "contentPath": "https://pve-geminar.warho.me",
+      "iconUrl": "https://cdn.jsdelivr.net/gh/selfhst/icons/png/proxmox.png"
     }
   ],
+  "taskbar": [],
   "startMenu": [
     {
       "title": "My Computer",
       "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
-      "contentPath": "/apps/computer.html"
+      "contentPath": "/../apps/computer.html"
     },
     {
       "title": "My Documents",

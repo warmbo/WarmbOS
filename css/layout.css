@@ -2,13 +2,11 @@
 
 .desktop {
     position: relative;
-    width: 95vw;
-    height: 95vh;
+    width: 100vw;
+    height: 100vh;
     background: var(--bg-img);
     background-size: cover;
-    box-shadow: 3px 3px 10px rgba(0,0,0,0.825);
     overflow: hidden;
-    border: 1px solid black;
 }
 
 /* --- Taskbar --- */

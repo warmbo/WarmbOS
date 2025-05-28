@@ -33,7 +33,21 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
     }
 
     const contentElement = windowClone.querySelector('.window-content-text');
-    if (content.endsWith('.html')) {
+    
+    // Handle different content types
+    if (content.startsWith('http://') || content.startsWith('https://')) {
+        // External URL - create an iframe to display it
+        const iframe = document.createElement('iframe');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.src = content;
+        
+        // Clear content element and append iframe
+        contentElement.innerHTML = '';
+        contentElement.appendChild(iframe);
+    } else if (content.endsWith('.html')) {
+        // Local HTML file
         fetch(content)
             .then(r => r.ok ? r.text() : Promise.reject())
             .then(html => {
@@ -77,6 +91,7 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
             })
             .catch(() => contentElement.textContent = 'Failed to load content.');
     } else {
+        // Plain text or other content
         contentElement.textContent = content;
     }
 
