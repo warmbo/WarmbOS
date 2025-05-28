@@ -1,16 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Information</title>
+
     <link rel="stylesheet" href="../css/apps/computer.css">
-</head>
-<body>
-    <div class="header">
-        <div class="title">WarmbOS System Information</div>
-        <div class="version">Development Edition</div>
-    </div>
     
     <div class="section">
         <div class="section-title">Operating System</div>
@@ -92,54 +81,8 @@
     </div>
     
     <div class="status" id="status">Connecting to server...</div>
+    
+    <div class="debug" id="debug">Debug info will appear here...</div>
 
-    <script>
-        async function loadSystemInfo() {
-            try {
-                const response = await fetch('/api/system');
-                if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                
-                const data = await response.json();
-                
-                // OS Info
-                document.getElementById('os-system').textContent = data.os.system;
-                document.getElementById('os-release').textContent = data.os.release;
-                document.getElementById('os-machine').textContent = data.os.machine;
-                document.getElementById('os-processor').textContent = data.os.processor || 'Unknown';
-                
-                // Python Info
-                document.getElementById('python-version').textContent = data.python.version;
-                document.getElementById('python-impl').textContent = data.python.implementation;
-                document.getElementById('python-exe').textContent = data.python.executable;
-                
-                // Disk Info
-                document.getElementById('disk-usage').textContent = 
-                    `${data.disk.used_gb} GB / ${data.disk.total_gb} GB (${data.disk.percent}%)`;
-                document.getElementById('disk-progress').style.width = `${data.disk.percent}%`;
-                
-                // Network Info
-                document.getElementById('hostname').textContent = data.network.hostname;
-                document.getElementById('fqdn').textContent = data.network.fqdn;
-                
-                // Server Info
-                document.getElementById('server-time').textContent = data.warmbos.server_time;
-                document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
-                
-                document.getElementById('status').textContent = 'Connected - Data refreshed';
-                document.getElementById('status').className = 'status';
-                
-            } catch (error) {
-                console.error('Failed to load system info:', error);
-                document.getElementById('status').textContent = `Error: ${error.message}`;
-                document.getElementById('status').className = 'status error';
-            }
-        }
-        
-        // Load on page load
-        loadSystemInfo();
-        
-        // Refresh every 30 seconds 
-        setInterval(loadSystemInfo, 30000);
-    </script>
-</body>
-</html>
+    <script type="text/plain" src="../js/computer.js"></script>
+

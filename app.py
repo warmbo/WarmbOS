@@ -4,6 +4,7 @@ Minimal Flask backend for warmbos-dev web desktop.
 """
 
 from flask import Flask, send_from_directory, jsonify, request
+from flask_cors import CORS
 import json
 import os
 from pathlib import Path
@@ -12,8 +13,13 @@ import shutil
 import socket
 import sys
 from datetime import datetime
+import psutil
+import datetime
 
 app = Flask(__name__, static_folder='.')
+
+# Enable CORS for all routes
+CORS(app)
 
 @app.route('/')
 def index():
@@ -80,40 +86,38 @@ def save_settings():
         print(f"Settings save error: {e}")  # Debug logging
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/system-info')
-def get_system_info():
-    try:
-        info = {
-            'os': {
-                'name': platform.system(),
-                'release': platform.release(),
-                'architecture': platform.architecture()[0]
-            },
-            'python': {
-                'version': platform.python_version()
-            }
-        }
-        return jsonify(info)
-    except Exception as e:
-        print(f"System info error: {e}")
-        return jsonify({"error": str(e)}), 500
+def get_uptime():
+    boot_time = datetime.datetime.fromtimestamp(psutil.boot_time())
+    now = datetime.datetime.utcnow()
+    uptime = now - boot_time
+    return str(uptime).split('.')[0]  # Format like '1 day, 2:34:56'
 
 @app.route('/api/system')
 def system_info():
-    import platform
-    import shutil
-    import socket
-    import sys
-    from datetime import datetime
+    """System information endpoint with comprehensive metrics"""
     try:
+        # Get disk usage
         total, used, free = shutil.disk_usage('.')
+        
+        # Get network info
+        hostname = socket.gethostname()
+        try:
+            fqdn = socket.getfqdn()
+        except:
+            fqdn = hostname
+        
+        # Get processor info with fallback
+        processor = platform.processor()
+        if not processor:
+            processor = 'Unknown'
+        
         return jsonify({
             'os': {
                 'system': platform.system(),
                 'release': platform.release(),
                 'version': platform.version(),
                 'machine': platform.machine(),
-                'processor': platform.processor() or 'Unknown'
+                'processor': processor
             },
             'python': {
                 'version': platform.python_version(),
@@ -127,16 +131,23 @@ def system_info():
                 'percent': round((used / total) * 100, 1)
             },
             'network': {
-                'hostname': socket.gethostname(),
-                'fqdn': socket.getfqdn()
+                'hostname': hostname,
+                'fqdn': fqdn
             },
             'warmbos': {
                 'version': '1.0.0-dev',
-                'server_time': datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                'server_time': datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC'),
+                'uptime': get_uptime()
             }
         })
     except Exception as e:
+        print(f"System info error: {e}")
         return jsonify({'error': str(e)}), 500
+
+# Legacy endpoint for compatibility
+@app.route('/api/system-info')
+def get_system_info():
+    return system_info()
 
 @app.route('/<path:filename>')
 def serve_file(filename):
@@ -144,4 +155,6 @@ def serve_file(filename):
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=False)
+    print(f"Starting WarmbOS Dev server on port {port}")
+    print(f"Access at: http://localhost:{port}")
+    app.run(host='0.0.0.0', port=port, debug=True)
