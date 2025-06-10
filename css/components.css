@@ -10,7 +10,7 @@
     border-radius: 4px;
     padding: 4px 6px;
     height: calc(var(--taskbar-height) - 8px);
-    transition: var(--transition);
+    transition: var(--transition-smooth);
     user-select: none;
     gap: 6px;
     font-size: .8em;
@@ -48,8 +48,8 @@
 }
 
 .taskbar-item img, .system-icon {
-    width: 22px;
-    height: 22px;
+    width: var(--icon-size-taskbar);
+    height: var(--icon-size-taskbar);
     border-radius: 4px;
     text-shadow: var(--text-shadow);
     filter: drop-shadow(0 0 3px rgba(255,255,255,0.25));
@@ -121,7 +121,7 @@
     overflow: hidden;
     border-radius: 4px;
     text-shadow: var(--text-shadow);
-    transition: transform 0.2s ease;
+    transition: transform var(--animation-fast) ease;
     color: var(--text-primary);
     text-decoration: none;
 }
@@ -153,8 +153,8 @@
 }
 
 .start-menu-item img {
-    width: 24px;
-    height: 24px;
+    width: var(--icon-size-start-menu);
+    height: var(--icon-size-start-menu);
     border-radius: 4px;
 }
 
@@ -229,8 +229,8 @@
     flex: 1;
     margin: 0 auto;
     border-radius: 4px;
-    width: 48px;
-    height: 48px;
+    width: var(--icon-size-desktop);
+    height: var(--icon-size-desktop);
     user-select: none;
     pointer-events: none;
 }
@@ -275,8 +275,8 @@
     position: absolute;
     top: 100px;
     left: 100px;
-    width: 640px;
-    height: 520px;
+    width: var(--window-default-width);
+    height: var(--window-default-height);
     backdrop-filter: var(--blur);
     z-index: 1;
     box-shadow: var(--shadow-soft);

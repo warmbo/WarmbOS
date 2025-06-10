@@ -2,6 +2,7 @@
 // Saves and restores window positions and open applications
 
 import { debounce } from './utils.js';
+import { DataManager } from './core/data-manager.js';
 
 const DESKTOP_STATE_KEY = 'warmbos-desktop-state';
 

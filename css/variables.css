@@ -3,7 +3,6 @@
     --theme-icons: rgba(255, 255, 255, 0.185);
     --window-bg: rgba(20, 20, 20, 0.75);
     --button-color: rgba(20, 20, 20, 0.5);
-    --bg-img: url('') no-repeat;
     --text-primary: #f0f0f0;
     --taskbar-height: 40px;
     --border: 1px solid rgba(20, 20, 20, 0.6);
@@ -21,4 +20,18 @@
     --padding-medium: 8px;
     --padding-large: 12px;
     --transition: all 0.2s ease;
+    --icon-size-desktop: 48px;
+    --icon-size-taskbar: 22px;
+    --icon-size-start-menu: 24px;
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --animation-fast: 0.2s;
+    --animation-normal: 0.3s;
+    --transition-smooth: all 0.2s ease;
+    --window-default-width: 640px;
+    --window-default-height: 520px;
+    --window-min-width: 200px;
+    --window-min-height: 120px;
+    --resize-handle-small: 8px;
+    --resize-handle-large: 16px;
 }

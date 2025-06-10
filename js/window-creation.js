@@ -1,17 +1,15 @@
 import { makeWindowDraggable, addWindowControls, bringWindowToFront } from './window-helpers.js';
+import { DataManager } from './core/data-manager.js';
 
 export function createWindow(title, content, iconUrl, skipTaskbar) {
     // Check if a window with this title is already open
-    const openWindows = document.querySelectorAll('.desktop .window');
-    for (const win of openWindows) {
-        const winTitle = win.querySelector('.window-title-text')?.textContent;
-        if (winTitle === title) {
-            // Focus this window: bring to front and un-minimize, but do NOT maximize
-            win.classList.remove('minimized');
-            win.style.display = '';
-            bringWindowToFront(win);
-            return;
-        }
+    const existingWindow = DataManager.findExistingWindow(title);
+    if (existingWindow) {
+        // Focus this window: bring to front and un-minimize, but do NOT maximize
+        existingWindow.classList.remove('minimized');
+        existingWindow.style.display = '';
+        bringWindowToFront(existingWindow);
+        return;
     }
 
     console.log("[createWindow] Creating:", title, content, iconUrl);

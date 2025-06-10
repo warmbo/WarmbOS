@@ -168,57 +168,6 @@ loadComponents().then(() => {
                 }
             }
             initializeWindowCreation();
-
-            // Focus window if already open when clicking desktop icon
-            desktopIconsContainer.addEventListener('click', function(e) {
-                const link = e.target.closest('a.open-window');
-                if (!link) return;
-                const title = link.dataset.title;
-                if (!title) return;
-                const openWindows = document.querySelectorAll('.desktop .window');
-                for (const win of openWindows) {
-                    const winTitle = win.querySelector('.window-title-text')?.textContent;
-                    if (winTitle === title) {
-                        bringWindowToFront(win);
-                        break;
-                    }
-                }
-            });
-            // Focus window if already open when clicking taskbar item
-            if (taskbarItemsContainer) {
-                taskbarItemsContainer.addEventListener('click', function(e) {
-                    const btn = e.target.closest('button.open-window');
-                    if (!btn) return;
-                    const title = btn.dataset.title;
-                    if (!title) return;
-                    const openWindows = document.querySelectorAll('.desktop .window');
-                    for (const win of openWindows) {
-                        const winTitle = win.querySelector('.window-title-text')?.textContent;
-                        if (winTitle === title) {
-                            bringWindowToFront(win);
-                            break;
-                        }
-                    }
-                });
-            }
-            // Focus window if already open when clicking start menu item
-            if (startMenuContainer) {
-                startMenuContainer.addEventListener('click', function(e) {
-                    const link = e.target.closest('a.open-window');
-                    if (!link) return;
-                    const title = link.dataset.title;
-                    if (!title) return;
-                    const openWindows = document.querySelectorAll('.desktop .window');
-                    for (const win of openWindows) {
-                        const winTitle = win.querySelector('.window-title-text')?.textContent;
-                        if (winTitle === title) {
-                            bringWindowToFront(win);
-                            break;
-                        }
-                    }
-                });
-            }
-
             // Initialize state management and load saved state
             initializeStateManagement();
             loadDesktopState();
