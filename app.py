@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 WarmbOS - Modular Flask Application
-Minimal main file that imports organized modules
+Updated for new folder structure
 """
 
 from flask import Flask
@@ -10,15 +10,15 @@ import os
 import sys
 import argparse
 
-# Import our modular components
-from routes.static_routes import setup_static_routes
-from routes.api_routes import setup_api_routes
-from services.icon_manager import IconManager
-from utils.system_utils import create_default_files
+# Import our modular components with new paths
+from server.routes.static import setup_static_routes
+from server.routes.api import setup_api_routes
+from server.services.icon_manager import IconManager
+from server.utils.helpers import create_default_files
 
 def create_app():
     """Application factory pattern"""
-    app = Flask(__name__, static_folder='.')
+    app = Flask(__name__, static_folder='client')
     CORS(app)
     
     # Setup route modules

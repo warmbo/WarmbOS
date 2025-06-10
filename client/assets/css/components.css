@@ -1,0 +1,551 @@
+@import url('./variables.css');
+
+/* --- Taskbar Components --- */
+.taskbar-item, .app-item, .system-item {
+    display: flex;
+    align-items: center;
+    background: var(--button-color);
+    color: var(--text-primary);
+    border: var(--button-border);
+    border-radius: var(--micro-sm);
+    padding: var(--micro-sm) var(--micro-md);
+    height: var(--taskbar-item-height);
+    transition: var(--transition-smooth);
+    user-select: none;
+    gap: var(--micro-md);
+    font-size: .8em;
+    cursor: auto;
+}
+
+.taskbar-item:hover {
+    background: var(--hover-bg);
+    box-shadow: var(--shadow-soft);
+}
+
+.taskbar-item:active {
+    background: var(--active-bg);
+    box-shadow: var(--shadow-inset);
+    scale: 0.95;
+}
+
+.start-menu-button {
+    font-size: 1em;
+}
+
+.app-group {
+    flex: 1;
+    display: flex;
+    gap: var(--micro-sm);
+}
+
+.divider {
+    width: var(--micro-xs);
+    height: var(--divider-height);
+    background: var(--divider-bg);
+    border: var(--button-border);
+    border-radius: var(--divider-radius);
+    margin: 0 var(--micro-xs);
+}
+
+.taskbar-item img, .system-icon {
+    width: var(--icon-size-taskbar);
+    height: var(--icon-size-taskbar);
+    border-radius: var(--micro-sm);
+    text-shadow: var(--text-shadow);
+    filter: drop-shadow(0 0 var(--micro-xs) rgba(255,255,255,0.25));
+}
+
+/* --- Start Menu --- */
+.start-menu {
+    position: absolute;
+    bottom: var(--taskbar-height);
+    left: var(--start-menu-left);
+    min-width: var(--start-menu-width);
+    height: var(--start-menu-height);
+    background: var(--window-bg);
+    border: var(--border);
+    border-bottom: none;
+    border-radius: var(--micro-sm) var(--micro-sm) 0 0;
+    box-shadow: var(--shadow-soft);
+    padding: var(--micro-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    backdrop-filter: var(--blur);
+    user-select: none;
+    color: var(--text-primary);
+    z-index: var(--z-start-menu);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--animation-normal) ease;
+}
+
+.start-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.start-menu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: var(--micro-md);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.start-menu-header h2 {
+    margin: 0;
+    font-size: 1.2em;
+    text-shadow: var(--text-shadow);
+}
+
+.start-menu-header img {
+    width: var(--start-menu-avatar-size);
+    height: var(--start-menu-avatar-size);
+    border-radius: 25%;
+    background: #333;
+}
+
+.start-menu-item-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--micro-md);
+}
+
+.start-menu-item {
+    display: flex;
+    align-items: center;
+    gap: var(--micro-xl);
+    position: relative;
+    padding: var(--micro-md) var(--micro-xl);
+    overflow: hidden;
+    border-radius: var(--micro-sm);
+    text-shadow: var(--text-shadow);
+    transition: transform var(--animation-fast) ease;
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+.start-menu-item:active {
+    transform: scale(0.95);
+}
+
+.start-menu-item:active::before {
+    opacity: 1;
+    background: linear-gradient(22deg,rgba(255,255,255,0.4),rgba(255,255,255,0.03),rgba(255,255,255,0.0));
+}
+
+.start-menu-item:hover::before {
+    opacity: 0.5;
+}
+
+.start-menu-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(22deg,rgba(255,255,255,0.1),rgba(255,255,255,0.015),rgba(255,255,255,0.0));
+    opacity: 0;
+    z-index: -1;
+    transition: opacity var(--animation-slow) ease;
+}
+
+.start-menu-item img {
+    width: var(--icon-size-start-menu);
+    height: var(--icon-size-start-menu);
+    border-radius: var(--micro-sm);
+}
+
+.start-menu-item span {
+    display: inline-block;
+    max-width: calc(100% - 40px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 1.2em;
+}
+
+/* --- Desktop Icons --- */
+#desktop-icons {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, var(--desktop-grid-width));
+    grid-auto-rows: var(--desktop-grid-height);
+    gap: var(--micro-xl);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    justify-content: start;
+    align-content: start;
+    padding: var(--micro-xl);
+}
+
+.grid-cell {
+    width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grid-cell.occupied {
+    border-radius: var(--micro-sm);
+}
+
+#desktop-icons a.open-window {
+    display: inline-block;
+    max-width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
+    text-decoration: none;
+    cursor: grab;
+    width: var(--desktop-icon-width);
+    margin: 0;
+}
+
+#desktop-icons a.open-window:active {
+    cursor: grabbing;
+}
+
+.icon {
+    border-radius: var(--micro-sm);
+    display: inline-block;
+    margin: 0;
+    padding: var(--micro-xl);
+    font-size: 0.825em;
+    text-align: center;
+    color: var(--text-primary);
+    user-select: none;
+    text-overflow: ellipsis;
+    transition: var(--transition);
+    background: none;
+    width: var(--desktop-icon-width);
+    box-sizing: border-box;
+}
+
+.icon img {
+    display: flex;
+    flex: 1;
+    margin: 0 auto;
+    border-radius: var(--micro-sm);
+    width: var(--icon-size-desktop);
+    height: var(--icon-size-desktop);
+    user-select: none;
+    pointer-events: none;
+}
+
+.icon span {
+    margin-top: var(--micro-xl);
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.2em;
+    max-height: 3.2em;
+    text-shadow: var(--text-shadow);
+    border-radius: var(--micro-sm);
+    padding: var(--micro-md) 0;
+    transition: var(--transition);
+}
+
+.icon:active {
+    scale: 0.95;
+}
+
+.icon:active span {
+    background: rgba(0,0,0,0.3);
+}
+
+#desktop-icons .icon.dragging {
+    opacity: 0.5;
+    z-index: 10000;
+    box-shadow: 0 0 var(--space-sm) #0008;
+}
+
+#desktop-icons .icon.placeholder {
+    border: 2px dashed #fff8;
+    background: rgba(255,255,255,0.07);
+    opacity: 0.7;
+    min-width: var(--desktop-icon-width);
+    min-height: var(--desktop-icon-height);
+}
+
+/* --- Windows --- */
+.window {
+    position: absolute;
+    top: var(--window-default-top);
+    left: var(--window-default-left);
+    width: var(--window-default-width);
+    height: var(--window-default-height);
+    backdrop-filter: var(--blur);
+    z-index: var(--z-window-base);
+    box-shadow: var(--shadow-soft);
+    border-radius: var(--micro-sm);
+    box-sizing: border-box;
+    transition: var(--transition-window);
+    transform-origin: center;
+}
+
+.window.maximized {
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    border-radius: 0;
+}
+
+.window.maximized .window-title-bar {
+    border-radius: 0 !important;
+}
+
+.window-title-bar {
+    display: flex;
+    align-items: center;
+    padding: var(--micro-sm) var(--micro-xl);
+    background: linear-gradient(65deg,rgba(0,0,0,0.8),rgba(0,0,0,0.6));
+    border-bottom: var(--border);
+    border-radius: var(--micro-sm) var(--micro-sm) 0 0;
+    color: var(--text-primary);
+    font-size: .875em;
+    user-select: none;
+    height: var(--window-titlebar-height);
+}
+
+.window-title {
+    flex: 1;
+    text-shadow: var(--text-shadow);
+}
+
+.window-title img {
+    width: var(--icon-size-window-title);
+    height: var(--icon-size-window-title);
+    margin-right: var(--micro-xl);
+    vertical-align: bottom;
+}
+
+.window-title-button {
+    width: var(--window-button-size);
+    height: var(--window-button-size);
+    display: flex;
+    margin-left: var(--micro-xs);
+    justify-content: center;
+    align-items: center;
+    color: var(--text-primary);
+    border: var(--button-border);
+    border-radius: var(--micro-sm);
+    background: var(--button-color);
+    transition: var(--transition);
+    vertical-align: bottom;
+}
+
+.window-title-button img {
+    height: var(--icon-size-window-button);
+    width: var(--icon-size-window-button);
+    pointer-events: none;
+}
+
+.window-title-button:hover {
+    background: var(--hover-bg);
+    box-shadow: var(--shadow-soft);
+}
+
+.window-title-button:active {
+    background: var(--active-bg);
+    box-shadow: var(--shadow-inset);
+    transform: scale(0.95);
+}
+
+.window-content {
+    height: calc(100% - var(--window-titlebar-height));
+    padding: 0;
+    color: var(--text-primary);
+    font-size: 0.9em;
+    line-height: 1.4em;
+    border: var(--border);
+    border-top: 0;
+    border-radius: 0 0 var(--micro-sm) var(--micro-sm);
+    background: var(--window-bg);
+    overflow: hidden;
+}
+
+/* Add padding back for text content only */
+.window-content-text {
+    height: 100%;
+    overflow: auto;
+    box-sizing: border-box;
+}
+
+/* Ensure iframes fill the entire content area */
+.window-content iframe {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+
+/* For windows with HTML content that should fill completely */
+.window-content.full-content {
+    padding: 0;
+}
+
+.window-content.full-content > * {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+}
+
+/* --- Window Resize Handles --- */
+.resize-handle {
+    background: transparent;
+    position: absolute;
+    z-index: 1001;
+}
+
+.resize-right {
+    right: 0; 
+    top: 0; 
+    width: var(--resize-handle-small); 
+    height: 100%; 
+    cursor: ew-resize;
+}
+
+.resize-bottom {
+    left: 0; 
+    bottom: 0; 
+    width: 100%; 
+    height: var(--resize-handle-small); 
+    cursor: ns-resize;
+}
+
+.resize-corner {
+    right: 0; 
+    bottom: 0; 
+    width: var(--resize-handle-large); 
+    height: var(--resize-handle-large); 
+    cursor: nwse-resize;
+}
+
+#drag-guard {
+    position: fixed;
+    left: 0; 
+    top: 0; 
+    width: 100vw; 
+    height: 100vh;
+    z-index: var(--z-drag-guard);
+    background: transparent;
+    cursor: default;
+}
+
+.window.active-window {
+    outline: none;
+    box-shadow: none;
+    z-index: inherit;
+}
+
+/* --- Grid Highlight --- */
+#desktop-icons .grid-highlight {
+    position: absolute;
+    width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px dashed rgba(255, 255, 255, 0.5);
+    pointer-events: none;
+    z-index: 9999;
+    display: none;
+}
+
+#desktop-icons .grid-highlight.active {
+    display: block;
+}
+
+/* Window animations */
+.window {
+    transition: var(--transition-window);
+    transform-origin: center;
+}
+
+/* Window opening animation */
+.window.opening {
+    animation: windowOpen var(--animation-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes windowOpen {
+    0% {
+        opacity: 0;
+        transform: scale(0.8) translateY(var(--space-lg));
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Window closing animation */
+.window.closing {
+    animation: windowClose var(--animation-normal) cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    pointer-events: none;
+}
+
+@keyframes windowClose {
+    0% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.8) translateY(calc(-1 * var(--space-lg)));
+    }
+}
+
+/* Window minimize animation */
+.window.minimizing {
+    animation: windowMinimize var(--animation-normal) cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    pointer-events: none;
+}
+
+@keyframes windowMinimize {
+    0% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(0.1) translateY(100px);
+    }
+}
+
+/* Window restore animation */
+.window.restoring {
+    animation: windowRestore var(--animation-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes windowRestore {
+    0% {
+        opacity: 0;
+        transform: scale(0.1) translateY(100px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Maximize/restore animations */
+.window.maximizing {
+    transition: var(--transition-window);
+}
+
+.window.restoring-size {
+    transition: var(--transition-window);
+}
+
+/* Prevent animations during drag */
+.window.dragging {
+    transition: none !important;
+    animation: none !important;
+}

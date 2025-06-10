@@ -1,0 +1,135 @@
+<link rel="stylesheet" href="../css/apps/settings.css">
+<link rel="stylesheet" href="../css/icon-picker.css">
+<div class="settings-container">
+    <div id="statusMessage" class="status-message"></div>
+    
+    <!-- Tab Navigation -->
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="preferences">Preferences</button>
+        <button class="tab-btn" data-tab="menu">Menu Editor</button>
+    </div>
+    
+    <!-- Preferences Tab -->
+    <div id="preferences-tab" class="tab-content active">
+        
+        <div class="form-group">
+            <label for="backgroundImage">Background Image URL:</label>
+            <input type="url" id="backgroundImage" placeholder="https://example.com/wallpaper.jpg">
+        </div>
+        
+        <div class="form-group">
+            <label for="theme">Theme:</label>
+            <select id="theme">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="fontSize">Font Size:</label>
+            <select id="fontSize">
+                <option value="12">Small (12px)</option>
+                <option value="14">Medium (14px)</option>
+                <option value="16">Large (16px)</option>
+                <option value="18">Extra Large (18px)</option>
+            </select>
+        </div>
+        
+        <button id="applyPrefsBtn" class="apply-btn">Apply</button>
+    </div>
+    
+    <!-- Menu Editor Tab -->
+    <div id="menu-tab" class="tab-content">
+        <div id="menu-main" class="menu-main">
+            
+            <!-- Desktop Shortcuts -->
+            <div class="menu-section">
+                <h3>Desktop Shortcuts</h3>
+                <div id="desktop-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="desktop">+ Add Desktop Shortcut</button>
+            </div>
+            
+            <!-- Taskbar Shortcuts -->
+            <div class="menu-section">
+                <h3>Taskbar Shortcuts</h3>
+                <div id="taskbar-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="taskbar">+ Add Taskbar Shortcut</button>
+            </div>
+            
+            <!-- Start Menu Shortcuts -->
+            <div class="menu-section">
+                <h3>Start Menu Shortcuts</h3>
+                <div id="startMenu-shortcuts" class="shortcuts-list"></div>
+                <button class="btn btn-secondary add-shortcut-btn" data-section="startMenu">+ Add Start Menu Shortcut</button>
+            </div>
+            
+            <button id="applyMenuBtn" class="apply-btn">Apply</button>
+        </div>
+        
+        <!-- Edit Shortcut View -->
+        <div id="edit-shortcut" class="edit-shortcut" style="display: none;">
+            <h2 id="editTitle">Edit Shortcut</h2>
+            
+            <div class="form-group">
+                <label for="shortcutTitle">Title:</label>
+                <input type="text" id="shortcutTitle" placeholder="My Application">
+            </div>
+            
+            <div class="form-group">
+                <label for="shortcutUrl">URL/Content Path:</label>
+                <input type="text" id="shortcutUrl" placeholder="/apps/myapp.html or https://example.com">
+            </div>
+            
+            <div class="icon-url-group">
+                <div class="form-group">
+                    <label for="shortcutIcon">Icon URL:</label>
+                    <input type="url" id="shortcutIcon" placeholder="Paste URL or browse icons below">
+                </div>
+                <button type="button" id="browseIconsBtn" class="btn btn-secondary browse-icons-btn">🎨 Browse Icons</button>
+            </div>
+            
+            <div class="edit-actions">
+                <button id="backBtn" class="btn btn-secondary">Back</button>
+                <button id="saveShortcutBtn" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Icon Picker Modal -->
+<div id="iconPickerModal" class="icon-modal">
+    <div class="icon-modal-overlay"></div>
+    <div class="icon-modal-content">
+        <div class="icon-modal-header">
+            <h3>Choose an Icon</h3>
+            <button type="button" class="icon-modal-close">&times;</button>
+        </div>
+        
+        <div class="icon-modal-body">
+            <div class="icon-controls">
+                <input type="text" id="iconSearch" placeholder="Search icons by name..." />
+                <select id="iconCategory">
+                    <option value="">All Categories</option>
+                </select>
+            </div>
+            
+            <div class="icon-stats" id="iconStats">Loading...</div>
+            
+            <div class="icon-grid" id="iconGrid">
+                <div class="icon-loading">Loading icons...</div>
+            </div>
+        </div>
+        
+        <div class="icon-modal-footer">
+            <div class="selected-icon-preview" id="selectedPreview">
+                <span>No icon selected</span>
+            </div>
+            <div class="icon-actions">
+                <button type="button" class="btn btn-secondary" onclick="closeIconPicker()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="applySelectedIcon()">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/plain" src="../js/settings.js"></script>

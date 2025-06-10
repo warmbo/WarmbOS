@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WarmbOS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    
+    <div class="desktop">
+        <div id="taskbar"></div>
+        <div id="start-menu"></div>
+        <div id="desktop-icons"></div>
+        <div id="window"></div>
+    </div>
+
+    <template id="window-template">
+        <div class="window">
+            <div class="window-title-bar">
+                <span class="window-title">
+                    <img src="https://img.icons8.com/?size=100&id=A6NzpssBf9Xg&format=png&color=000000">
+                    <span class="window-title-text"></span>
+                </span>
+                <button class="minimize-button window-title-button">
+                    <img src="https://img.icons8.com/?size=100&id=SqI0tEwvS9NO&format=png&color=000000">
+                </button>
+                <button class="maximize-button window-title-button">
+                    <img src="https://img.icons8.com/?size=100&id=K0l4dwcsMaJa&format=png&color=000000">
+                </button>
+                <button class="close-button window-title-button">
+                    <img src="https://img.icons8.com/?size=100&id=08CBfcuIknqm&format=png&color=000000">
+                </button>
+            </div>
+            <div class="window-content">
+                <p class="window-content-text"></p>
+            </div>
+        </div>
+    </template>
+
+    <script type="module" src="js/main.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const flushBtn = document.getElementById('flush-storage-btn');
+            if (flushBtn) {
+            flushBtn.addEventListener('click', () => {
+                const confirmed = confirm("Are you sure you want to clear all settings and reload?");
+                if (confirmed) {
+                localStorage.clear();
+                location.reload();
+                }
+            });
+            } else {
+            console.warn("Flush button not found in DOM.");
+            }
+        });
+    </script>
+    
+</body>
+</html>
