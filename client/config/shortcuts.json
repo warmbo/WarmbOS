@@ -2,7 +2,7 @@
   "desktop": [
     {
       "title": "My Computer",
-      "contentPath": "/apps/computer.html",
+      "contentPath": "/apps/computer/index.html",
       "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000"
     },
     {
@@ -13,7 +13,12 @@
     {
       "title": "My Notes",
       "iconUrl": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
-      "contentPath": "/apps/notes.html"
+      "contentPath": "/apps/notes/index.html"
+    },
+    {
+      "title": "Settings",
+      "iconUrl": "https://img.icons8.com/?size=100&id=PUULuXvUfB6u&format=png&color=000000",
+      "contentPath": "/apps/settings/index.html"
     },
     {
       "title": "Bookstack",
@@ -31,7 +36,7 @@
     {
       "title": "My Computer",
       "iconUrl": "https://img.icons8.com/?size=100&id=iCwcOoy8tOGw&format=png&color=000000",
-      "contentPath": "/../apps/computer.html"
+      "contentPath": "/apps/computer/index.html"
     },
     {
       "title": "My Documents",
@@ -41,7 +46,12 @@
     {
       "title": "My Notes",
       "iconUrl": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
-      "contentPath": "#notes"
+      "contentPath": "/apps/notes/index.html"
+    },
+    {
+      "title": "Settings",
+      "iconUrl": "https://img.icons8.com/?size=100&id=PUULuXvUfB6u&format=png&color=000000",
+      "contentPath": "/apps/settings/index.html"
     }
   ]
 }

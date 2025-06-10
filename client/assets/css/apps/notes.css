@@ -1,0 +1,175 @@
+/* Notes App Styles */
+
+.notes-app {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background: #000;
+    color: #fff;
+    font-family: var(--font-family-base, system-ui, sans-serif);
+}
+
+/* Sidebar Styles */
+.notes-sidebar {
+    width: 25%;
+    min-width: 200px;
+    background: #18181b;
+    padding: 8px;
+    border-right: 1px solid #27272a;
+    display: flex;
+    flex-direction: column;
+}
+
+.notes-sidebar h2 {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    color: var(--text-primary, #f0f0f0);
+    text-shadow: var(--text-shadow, 1px 1px 2px rgba(20, 20, 20, 1));
+}
+
+.notes-list {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.note-item {
+    padding: 4px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    background: #27272a;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.note-item:hover {
+    background: #3f3f46;
+}
+
+.note-item.active {
+    background: var(--bg-primary, #8f9fbb);
+    color: #fff;
+}
+
+.note-item span {
+    display: inline-block;
+    width: calc(100% - 20px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.note-item button {
+    background: none;
+    border: none;
+    color: #ef4444;
+    float: right;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: background-color 0.2s ease;
+}
+
+.note-item button:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* Main Editor Styles */
+.notes-main {
+    width: 75%;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+}
+
+.notes-input, .notes-textarea {
+    background: #18181b;
+    color: #fff;
+    border: 1px solid #27272a;
+    border-radius: 4px;
+    margin-bottom: 6px;
+    padding: 6px;
+    font-size: 0.9rem;
+    font-family: inherit;
+    transition: border-color 0.2s ease;
+}
+
+.notes-input:focus, .notes-textarea:focus {
+    outline: none;
+    border-color: var(--bg-primary, #8f9fbb);
+}
+
+.notes-textarea {
+    flex-grow: 1;
+    resize: none;
+    min-height: 200px;
+    font-family: var(--font-family-mono, 'SF Mono', Monaco, monospace);
+    line-height: 1.5;
+}
+
+.add-note-btn {
+    background: #3f3f46;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    margin-bottom: 6px;
+    font-size: 0.85rem;
+    transition: background-color 0.2s ease;
+}
+
+.add-note-btn:hover {
+    background: #525252;
+}
+
+.add-note-btn:active {
+    background: #404040;
+    transform: translateY(1px);
+}
+
+/* Status and Info Styles */
+.notes-status {
+    font-size: 0.75rem;
+    color: var(--text-muted, rgba(255, 255, 255, 0.5));
+    padding: 4px 8px;
+    text-align: center;
+    border-top: 1px solid #27272a;
+    margin-top: auto;
+}
+
+/* Empty State */
+.notes-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--text-muted, rgba(255, 255, 255, 0.5));
+    text-align: center;
+}
+
+.notes-empty h3 {
+    margin-bottom: 8px;
+    color: var(--text-secondary, rgba(255, 255, 255, 0.7));
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .notes-app {
+        flex-direction: column;
+    }
+    
+    .notes-sidebar {
+        width: 100%;
+        height: 40%;
+        border-right: none;
+        border-bottom: 1px solid #27272a;
+    }
+    
+    .notes-main {
+        width: 100%;
+        height: 60%;
+    }
+}

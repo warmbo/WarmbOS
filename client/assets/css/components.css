@@ -1,4 +1,4 @@
-@import url('./base/variables.css');
+/* Import handled by main.css - variables should be available */
 
 /* --- Taskbar Components --- */
 .taskbar-item, .app-item, .system-item {

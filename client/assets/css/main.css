@@ -1,9 +1,20 @@
+/* WarmbOS Main CSS - Import Order Matters */
+
+/* 1. Base styles first */
 @import url('./base/variables.css');
 @import url('./base/reset.css');
 @import url('./base/typography.css');
+
+/* 2. Layout styles */
 @import url('./layout.css');
+
+/* 3. Component styles (includes windows) */
 @import url('./components.css');
+
+/* 4. Application-specific styles */
 @import url('./apps/settings.css');
 @import url('./apps/notes.css');
 @import url('./apps/computer.css');
+
+/* 5. Modal and overlay styles */
 @import url('./icon-picker.css');

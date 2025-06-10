@@ -18,6 +18,30 @@ def setup_static_routes(app):
         """Serve main desktop page"""
         return send_from_directory('client', 'index.html')
 
+    @app.route('/apps/<path:filename>')
+    def serve_app_files(filename):
+        """Serve application files from client/apps directory"""
+        try:
+            return send_from_directory('client/apps', filename)
+        except FileNotFoundError:
+            return jsonify({"error": f"App file not found: {filename}"}), 404
+
+    @app.route('/assets/<path:filename>')
+    def serve_assets(filename):
+        """Serve asset files from client/assets directory"""
+        try:
+            return send_from_directory('client/assets', filename)
+        except FileNotFoundError:
+            return jsonify({"error": f"Asset not found: {filename}"}), 404
+
+    @app.route('/components/<path:filename>')
+    def serve_components(filename):
+        """Serve component files from client/components directory"""
+        try:
+            return send_from_directory('client/components', filename)
+        except FileNotFoundError:
+            return jsonify({"error": f"Component not found: {filename}"}), 404
+
     @app.route('/config/shortcuts.json')
     def get_shortcuts():
         """Get shortcuts configuration"""
