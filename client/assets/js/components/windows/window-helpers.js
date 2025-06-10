@@ -191,7 +191,7 @@ export function addWindowControls(el) {
             addTaskbarItem(title, el, iconUrl);
             
             // Trigger state save
-            import('./desktop-state.js').then(stateModule => {
+            import('../../desktop-state.js').then(stateModule => {
                 stateModule.saveDesktopState();
             });
         }, 300);
@@ -283,7 +283,7 @@ function restoreWindow(windowEl) {
         bringWindowToFront(windowEl);
         
         // Trigger state save
-        import('./desktop-state.js').then(stateModule => {
+        import('../../desktop-state.js').then(stateModule => {
             stateModule.saveDesktopState();
         });
     }, 300);
