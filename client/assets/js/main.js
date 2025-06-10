@@ -1,13 +1,14 @@
+// Fixed import paths to match actual file locations
 import { initializeWindowCreation } from './components/windows/window-creation.js';
 import { initializeStartMenuToggle } from './components/start-menu.js';
 import { initializeClock } from './components/clock.js';
-import { bringWindowToFront } from './components/windows/window-helpers.js';
-import { loadDesktopState, initializeStateManagement } from './desktop-state.js';
+import { bringWindowToFront } from './components/window-helpers.js';
+import { loadDesktopState, initializeStateManagement } from './core/desktop-state.js';
 
 // Load and apply background from settings
 async function loadBackground() {
     try {
-        const response = await fetch('/settings.json');
+        const response = await fetch('/config/settings.json');
         const settings = await response.json();
         if (settings.backgroundImage) {
             const desktop = document.querySelector('.desktop');

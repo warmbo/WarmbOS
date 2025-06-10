@@ -1,5 +1,5 @@
-import { makeWindowDraggable, addWindowControls, bringWindowToFront } from './window-helpers.js';
-import { DataManager } from './core/data-manager.js';
+import { makeWindowDraggable, addWindowControls, bringWindowToFront } from '../window-helpers.js';
+import { DataManager } from '../../core/data-manager.js';
 
 export function createWindow(title, content, iconUrl, skipTaskbar) {
     // Check if a window with this title is already open
@@ -118,7 +118,7 @@ export function createWindow(title, content, iconUrl, skipTaskbar) {
             const iconImg = windowEl.querySelector('.window-title img');
             const iconUrlFinal = iconImg ? iconImg.src : '';
             const titleFinal = windowEl.querySelector('.window-title-text').textContent;
-            import('./window-helpers.js').then(mod => {
+            import('../../window-helpers.js').then(mod => {
                 mod.addTaskbarItem(titleFinal, windowEl, iconUrlFinal);
             });
         }

@@ -1,7 +1,7 @@
 // Optimized Desktop State Management - Improved minimize/restore and cleaner architecture
 
-import { debounce } from './components/utils.js';
-import { DataManager } from './core/data-manager.js';
+import { debounce } from '../components/utils.js';
+import { DataManager } from './data-manager.js';
 
 // === CONSTANTS ===
 const STORAGE_KEY = 'warmbos-desktop-state';
@@ -160,8 +160,8 @@ class DesktopStateManager {
     // === STATE RESTORATION ===
     restoreWindows(windowStates) {
         Promise.all([
-            import('./window-creation.js'),
-            import('./components/windows/window-helpers.js')
+            import('../components/windows/window-creation.js'),
+            import('../components/window-helpers.js')
         ]).then(([windowModule, helpersModule]) => {
             windowStates.forEach((windowState, index) => {
                 // Stagger window creation to avoid conflicts
