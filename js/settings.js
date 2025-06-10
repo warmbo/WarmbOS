@@ -211,12 +211,15 @@ function renderIcons() {
         // Keep the original name as-is for display
         const displayName = icon.name;
         
+        // Create PNG path for display in the picker
+        const pngPath = `/icons/png/${icon.filename}.png`;
+        
         // Create a safe ID for this icon
         const iconId = `icon-${index}`;
         
         return `
             <div class="icon-item" data-filename="${icon.filename}.png" data-name="${displayName}" id="${iconId}">
-                <img src="${icon.path}" alt="${displayName}" onerror="this.style.opacity='0.3'" />
+                <img src="${pngPath}" alt="${displayName}" onerror="this.style.opacity='0.3'" />
                 <span title="${displayName}">${displayName}</span>
             </div>
         `;

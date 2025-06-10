@@ -317,7 +317,12 @@ def save_settings():
 def serve_icon(filename):
     """Serve icons from the icons directory"""
     if ICONS_DIR.exists():
-        return send_from_directory(str(ICONS_DIR), filename)
+        try:
+            return send_from_directory(str(ICONS_DIR), filename)
+        except FileNotFoundError:
+            # If PNG not found, log it for debugging
+            print(f"Icon not found: {filename}")
+            return jsonify({"error": f"Icon not found: {filename}"}), 404
     else:
         return jsonify({"error": "Icons directory not found. Sync icons first."}), 404
 
