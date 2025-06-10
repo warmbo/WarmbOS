@@ -370,7 +370,6 @@
 
 /* Add padding back for text content only */
 .window-content-text {
-    padding: 8px 20px;
     height: 100%;
     overflow: auto;
     box-sizing: border-box;
@@ -462,23 +461,6 @@
 
 #desktop-icons .grid-highlight.active {
     display: block;
-}
-
-/* Icon Glow */
-
-.icon img,
-.start-menu-item img,
-.taskbar-item img,
-.window-title img,
-.window-title-bar img,
-.window img,
-button img,
-a img {
-    filter: 
-        drop-shadow(1px 1px 0px var(--theme-icons))
-        drop-shadow(-1px -1px 0px var(--theme-icons))
-        drop-shadow(1px -1px 0px var(--theme-icons))
-        drop-shadow(-1px 1px 0px var(--theme-icons));
 }
 
 /* Window animations */

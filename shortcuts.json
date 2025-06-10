@@ -14,6 +14,16 @@
       "title": "My Notes",
       "iconUrl": "https://img.icons8.com/?size=100&id=JWpT8cAn8G0V&format=png&color=000000",
       "contentPath": "/apps/notes.html"
+    },
+    {
+      "title": "Bookstack",
+      "contentPath": "https://wiki.warho.me",
+      "iconUrl": "/icons/svg/bookstack-light.svg"
+    },
+    {
+      "title": "Tdarr",
+      "contentPath": "http://10.0.0.134:8265/",
+      "iconUrl": "/icons/png/tdarr.png"
     }
   ],
   "taskbar": [],
