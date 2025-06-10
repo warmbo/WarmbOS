@@ -1,5 +1,5 @@
-import { initializeWindowCreation } from './window-creation.js';
-import { initializeStartMenuToggle } from './start-menu.js';
+import { initializeWindowCreation } from './components/windows/window-creation.js';
+import { initializeStartMenuToggle } from './components/start-menu.js';
 import { initializeClock } from './clock.js';
 import { bringWindowToFront } from './window-helpers.js';
 import { loadDesktopState, initializeStateManagement } from './desktop-state.js';

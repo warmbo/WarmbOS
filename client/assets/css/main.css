@@ -1,0 +1,14 @@
+@import url('./base/reset.css');
+@import url('./base/variables.css'); 
+@import url('./base/typography.css');
+@import url('./layout/desktop.css');
+@import url('./layout/taskbar.css');
+@import url('./layout/windows.css');
+@import url('./components/buttons.css');
+@import url('./components/forms.css');
+@import url('./components/icons.css');
+@import url('./components/modals.css');
+@import url('./components/start-menu.css');
+@import url('./apps/settings.css');
+@import url('./apps/notes.css');
+@import url('./apps/computer.css');
