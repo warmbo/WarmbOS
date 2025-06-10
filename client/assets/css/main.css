@@ -7,8 +7,9 @@
 
 /* 2. Layout styles */
 @import url('./layout.css');
+@import url('./layout/windows.css');
 
-/* 3. Component styles (includes windows) */
+/* 3. Component styles */
 @import url('./components.css');
 
 /* 4. Application-specific styles */
