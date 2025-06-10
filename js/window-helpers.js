@@ -214,7 +214,7 @@ export function addWindowControls(el) {
                 const taskbarHeight = document.getElementById('taskbar')?.offsetHeight || 0;
                 Object.assign(el.style, {
                     width: '100%',
-                    height: `calc(100% - ${taskbarHeight}px)`,
+                    height: `calc(100vh - 40px)`,
                     left: '0',
                     top: '0'
                 });

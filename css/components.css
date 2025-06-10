@@ -7,12 +7,12 @@
     background: var(--button-color);
     color: var(--text-primary);
     border: var(--button-border);
-    border-radius: 4px;
-    padding: 4px 6px;
-    height: calc(var(--taskbar-height) - 8px);
+    border-radius: var(--micro-sm);
+    padding: var(--micro-sm) var(--micro-md);
+    height: var(--taskbar-item-height);
     transition: var(--transition-smooth);
     user-select: none;
-    gap: 6px;
+    gap: var(--micro-md);
     font-size: .8em;
     cursor: auto;
 }
@@ -35,49 +35,49 @@
 .app-group {
     flex: 1;
     display: flex;
-    gap: 4px;
+    gap: var(--micro-sm);
 }
 
 .divider {
-    width: 3px;
-    height: 22px;
+    width: var(--micro-xs);
+    height: var(--divider-height);
     background: var(--divider-bg);
     border: var(--button-border);
     border-radius: var(--divider-radius);
-    margin: 0 3px;
+    margin: 0 var(--micro-xs);
 }
 
 .taskbar-item img, .system-icon {
     width: var(--icon-size-taskbar);
     height: var(--icon-size-taskbar);
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     text-shadow: var(--text-shadow);
-    filter: drop-shadow(0 0 3px rgba(255,255,255,0.25));
+    filter: drop-shadow(0 0 var(--micro-xs) rgba(255,255,255,0.25));
 }
 
 /* --- Start Menu --- */
 .start-menu {
     position: absolute;
     bottom: var(--taskbar-height);
-    left: 6px;
-    min-width: 250px;
-    height: 400px;
+    left: var(--start-menu-left);
+    min-width: var(--start-menu-width);
+    height: var(--start-menu-height);
     background: var(--window-bg);
     border: var(--border);
     border-bottom: none;
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--micro-sm) var(--micro-sm) 0 0;
     box-shadow: var(--shadow-soft);
-    padding: 8px;
+    padding: var(--micro-xl);
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: var(--space-sm);
     backdrop-filter: var(--blur);
     user-select: none;
     color: var(--text-primary);
-    z-index: 9998;
+    z-index: var(--z-start-menu);
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease;
+    transition: opacity var(--animation-normal) ease;
 }
 
 .start-menu.show {
@@ -89,7 +89,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 6px;
+    padding-bottom: var(--micro-md);
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
 
@@ -100,8 +100,8 @@
 }
 
 .start-menu-header img {
-    width: 42px;
-    height: 42px;
+    width: var(--start-menu-avatar-size);
+    height: var(--start-menu-avatar-size);
     border-radius: 25%;
     background: #333;
 }
@@ -109,17 +109,17 @@
 .start-menu-item-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: var(--micro-md);
 }
 
 .start-menu-item {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--micro-xl);
     position: relative;
-    padding: 6px 8px;
+    padding: var(--micro-md) var(--micro-xl);
     overflow: hidden;
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     text-shadow: var(--text-shadow);
     transition: transform var(--animation-fast) ease;
     color: var(--text-primary);
@@ -149,13 +149,13 @@
     background: linear-gradient(22deg,rgba(255,255,255,0.1),rgba(255,255,255,0.015),rgba(255,255,255,0.0));
     opacity: 0;
     z-index: -1;
-    transition: opacity 0.3s ease;
+    transition: opacity var(--animation-slow) ease;
 }
 
 .start-menu-item img {
     width: var(--icon-size-start-menu);
     height: var(--icon-size-start-menu);
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
 }
 
 .start-menu-item span {
@@ -170,20 +170,20 @@
 /* --- Desktop Icons --- */
 #desktop-icons {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 98px);
-    grid-auto-rows: 116px;
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, var(--desktop-grid-width));
+    grid-auto-rows: var(--desktop-grid-height);
+    gap: var(--micro-xl);
     position: relative;
     width: 100%;
     height: 100%;
     justify-content: start;
     align-content: start;
-    padding: 8px;
+    padding: var(--micro-xl);
 }
 
 .grid-cell {
-    width: 90px;
-    height: 108px;
+    width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
     position: relative;
     display: flex;
     align-items: center;
@@ -191,16 +191,16 @@
 }
 
 .grid-cell.occupied {
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
 }
 
 #desktop-icons a.open-window {
     display: inline-block;
-    max-width: 90px;
-    height: 108px;
+    max-width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
     text-decoration: none;
     cursor: grab;
-    width: 90px;
+    width: var(--desktop-icon-width);
     margin: 0;
 }
 
@@ -209,10 +209,10 @@
 }
 
 .icon {
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     display: inline-block;
     margin: 0;
-    padding: 8px;
+    padding: var(--micro-xl);
     font-size: 0.825em;
     text-align: center;
     color: var(--text-primary);
@@ -220,7 +220,7 @@
     text-overflow: ellipsis;
     transition: var(--transition);
     background: none;
-    width: 90px;
+    width: var(--desktop-icon-width);
     box-sizing: border-box;
 }
 
@@ -228,7 +228,7 @@
     display: flex;
     flex: 1;
     margin: 0 auto;
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     width: var(--icon-size-desktop);
     height: var(--icon-size-desktop);
     user-select: none;
@@ -236,15 +236,15 @@
 }
 
 .icon span {
-    margin-top: 8px;
+    margin-top: var(--micro-xl);
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     line-height: 1.2em;
     max-height: 3.2em;
     text-shadow: var(--text-shadow);
-    border-radius: 4px;
-    padding: 5px 0;
+    border-radius: var(--micro-sm);
+    padding: var(--micro-md) 0;
     transition: var(--transition);
 }
 
@@ -259,30 +259,30 @@
 #desktop-icons .icon.dragging {
     opacity: 0.5;
     z-index: 10000;
-    box-shadow: 0 0 10px #0008;
+    box-shadow: 0 0 var(--space-sm) #0008;
 }
 
 #desktop-icons .icon.placeholder {
     border: 2px dashed #fff8;
     background: rgba(255,255,255,0.07);
     opacity: 0.7;
-    min-width: 90px;
-    min-height: 108px;
+    min-width: var(--desktop-icon-width);
+    min-height: var(--desktop-icon-height);
 }
 
 /* --- Windows --- */
 .window {
     position: absolute;
-    top: 100px;
-    left: 100px;
+    top: var(--window-default-top);
+    left: var(--window-default-left);
     width: var(--window-default-width);
     height: var(--window-default-height);
     backdrop-filter: var(--blur);
-    z-index: 1;
+    z-index: var(--z-window-base);
     box-shadow: var(--shadow-soft);
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     box-sizing: border-box;
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: var(--transition-window);
     transform-origin: center;
 }
 
@@ -301,14 +301,14 @@
 .window-title-bar {
     display: flex;
     align-items: center;
-    padding: 4px 8px;
+    padding: var(--micro-sm) var(--micro-xl);
     background: linear-gradient(65deg,rgba(0,0,0,0.8),rgba(0,0,0,0.6));
     border-bottom: var(--border);
-    border-radius: 4px 4px 0 0;
+    border-radius: var(--micro-sm) var(--micro-sm) 0 0;
     color: var(--text-primary);
     font-size: .875em;
     user-select: none;
-    height: 32px;
+    height: var(--window-titlebar-height);
 }
 
 .window-title {
@@ -317,30 +317,30 @@
 }
 
 .window-title img {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
+    width: var(--icon-size-window-title);
+    height: var(--icon-size-window-title);
+    margin-right: var(--micro-xl);
     vertical-align: bottom;
 }
 
 .window-title-button {
-    width: 20px;
-    height: 20px;
+    width: var(--window-button-size);
+    height: var(--window-button-size);
     display: flex;
-    margin-left: 3px;
+    margin-left: var(--micro-xs);
     justify-content: center;
     align-items: center;
     color: var(--text-primary);
     border: var(--button-border);
-    border-radius: 4px;
+    border-radius: var(--micro-sm);
     background: var(--button-color);
     transition: var(--transition);
     vertical-align: bottom;
 }
 
 .window-title-button img {
-    height: 12px;
-    width: 12px;
+    height: var(--icon-size-window-button);
+    width: var(--icon-size-window-button);
     pointer-events: none;
 }
 
@@ -356,16 +356,16 @@
 }
 
 .window-content {
-    height: calc(100% - 32px);
-    padding: 0; /* Remove padding */
+    height: calc(100% - var(--window-titlebar-height));
+    padding: 0;
     color: var(--text-primary);
     font-size: 0.9em;
     line-height: 1.4em;
     border: var(--border);
     border-top: 0;
-    border-radius: 0 0 4px 4px;
+    border-radius: 0 0 var(--micro-sm) var(--micro-sm);
     background: var(--window-bg);
-    overflow: hidden; /* Change from auto to hidden to prevent scrollbars affecting layout */
+    overflow: hidden;
 }
 
 /* Add padding back for text content only */
@@ -409,7 +409,7 @@
 .resize-right {
     right: 0; 
     top: 0; 
-    width: 8px; 
+    width: var(--resize-handle-small); 
     height: 100%; 
     cursor: ew-resize;
 }
@@ -418,15 +418,15 @@
     left: 0; 
     bottom: 0; 
     width: 100%; 
-    height: 8px; 
+    height: var(--resize-handle-small); 
     cursor: ns-resize;
 }
 
 .resize-corner {
     right: 0; 
     bottom: 0; 
-    width: 16px; 
-    height: 16px; 
+    width: var(--resize-handle-large); 
+    height: var(--resize-handle-large); 
     cursor: nwse-resize;
 }
 
@@ -436,7 +436,7 @@
     top: 0; 
     width: 100vw; 
     height: 100vh;
-    z-index: 9999;
+    z-index: var(--z-drag-guard);
     background: transparent;
     cursor: default;
 }
@@ -450,8 +450,8 @@
 /* --- Grid Highlight --- */
 #desktop-icons .grid-highlight {
     position: absolute;
-    width: 90px;
-    height: 108px;
+    width: var(--desktop-icon-width);
+    height: var(--desktop-icon-height);
     background: rgba(255, 255, 255, 0.2);
     border: 2px dashed rgba(255, 255, 255, 0.5);
     pointer-events: none;
@@ -465,19 +465,19 @@
 
 /* Window animations */
 .window {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: var(--transition-window);
     transform-origin: center;
 }
 
 /* Window opening animation */
 .window.opening {
-    animation: windowOpen 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: windowOpen var(--animation-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes windowOpen {
     0% {
         opacity: 0;
-        transform: scale(0.8) translateY(20px);
+        transform: scale(0.8) translateY(var(--space-lg));
     }
     100% {
         opacity: 1;
@@ -487,7 +487,7 @@
 
 /* Window closing animation */
 .window.closing {
-    animation: windowClose 0.25s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    animation: windowClose var(--animation-normal) cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
     pointer-events: none;
 }
 
@@ -498,13 +498,13 @@
     }
     100% {
         opacity: 0;
-        transform: scale(0.8) translateY(-20px);
+        transform: scale(0.8) translateY(calc(-1 * var(--space-lg)));
     }
 }
 
 /* Window minimize animation */
 .window.minimizing {
-    animation: windowMinimize 0.3s cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
+    animation: windowMinimize var(--animation-normal) cubic-bezier(0.55, 0.055, 0.675, 0.19) forwards;
     pointer-events: none;
 }
 
@@ -521,7 +521,7 @@
 
 /* Window restore animation */
 .window.restoring {
-    animation: windowRestore 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    animation: windowRestore var(--animation-normal) cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
 }
 
 @keyframes windowRestore {
@@ -537,11 +537,11 @@
 
 /* Maximize/restore animations */
 .window.maximizing {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: var(--transition-window);
 }
 
 .window.restoring-size {
-    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transition: var(--transition-window);
 }
 
 /* Prevent animations during drag */

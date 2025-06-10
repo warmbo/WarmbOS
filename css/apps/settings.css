@@ -11,9 +11,9 @@
 /* Status Messages */
 .status-message {
     display: none;
-    padding: 6px;
-    margin-bottom: 15px;
-    border-radius: 4px;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-xl);
+    border-radius: var(--spacing-sm);
 }
 
 /* Tabs */
@@ -23,12 +23,12 @@
     margin: 0;
     padding: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0px 0px 4px 4px;
+    border-radius: 0px 0px var(--spacing-sm) var(--spacing-sm);
 }
 
 .tab-btn {
     flex: 1;
-    padding: 8px 12px;
+    padding: var(--spacing-lg) var(--spacing-xl);
     border: none;
     background: none;
     cursor: pointer;
@@ -45,7 +45,7 @@
 
 .tab-content {
     display: none;
-    padding: 20px;
+    padding: var(--spacing-xxxl);
 }
 
 .tab-content.active {
@@ -55,13 +55,13 @@
 /* Apply Button - Fixed Bottom Right */
 .apply-btn {
     position: fixed;
-    bottom: 15px;
-    right: 15px;
-    padding: 6px 12px;
+    bottom: var(--spacing-xl);
+    right: var(--spacing-xl);
+    padding: var(--spacing-md) var(--spacing-xl);
     background: var(--bg-primary);
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
     cursor: pointer;
     font-size: 0.9em;
     z-index: 100;
@@ -73,21 +73,21 @@
 
 /* Forms */
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: var(--spacing-xl);
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: var(--spacing-sm);
     font-weight: bold;
     color: var(--text-primary);
 }
 
 .form-group input,
 .form-group select {
-    padding: 8px;
+    padding: var(--spacing-lg);
     border: 1px solid rgba(255,255,255,.1);
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
     background: rgba(255,255,255,.025);
     width: 100%;
     color: var(--text-primary);
@@ -96,11 +96,11 @@
 
 /* Buttons */
 .btn {
-    padding: 8px 16px;
+    padding: var(--spacing-lg) var(--spacing-xxl);
     border: none;
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
     cursor: pointer;
-    margin-right: 8px;
+    margin-right: var(--spacing-lg);
 }
 
 .btn-primary {
@@ -120,52 +120,52 @@
 
 .edit-shortcut {
     display: none;
-    padding: 20px;
+    padding: var(--spacing-xxxl);
 }
 
 .edit-shortcut h2 {
     color: var(--text-primary);
-    padding-bottom: 5px;
-    margin-bottom: 5px;
+    padding-bottom: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
     font-size: 1.1em;
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .edit-actions {
-    margin-top: 20px;
+    margin-top: var(--spacing-xxxl);
     display: flex;
-    gap: 10px;
+    gap: var(--spacing-lg);
 }
 
 /* Menu Sections */
 .menu-section {
     margin-bottom: 25px;
-    padding: 15px;
+    padding: var(--spacing-xl);
     border: 1px solid rgba(255,255,255,.1);
     background: rgba(255,255,255,.025);
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
 }
 
 .menu-section h3 {
     color: var(--text-primary);
     border-bottom: 1px solid rgba(255,255,255,.1);
-    padding-bottom: 4px;
+    padding-bottom: var(--spacing-sm);
 }
 
 .shortcuts-list {
-    margin: 8px;
+    margin: var(--spacing-lg);
 }
 
 .shortcut-item {
     display: flex;
     align-items: center;
-    padding: 4px;
+    padding: var(--spacing-sm);
 }
 
 .shortcut-icon {
-    width: 24px;
-    height: 24px;
-    margin-right: 10px;
+    width: var(--icon-size-start-menu);
+    height: var(--icon-size-start-menu);
+    margin-right: var(--spacing-lg);
 }
 
 .shortcut-info {
@@ -184,7 +184,7 @@
 
 .add-shortcut-btn {
     width: 100%;
-    padding: 12px;
+    padding: var(--spacing-xl);
     border: var(--button-border);
     background: var(--button-color);
 }

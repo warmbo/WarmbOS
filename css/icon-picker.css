@@ -30,7 +30,7 @@
     background: rgba(0,0,0,.7);
     backdrop-filter: var(--blur);
     border: var(--border);
-    border-radius: 8px;
+    border-radius: var(--spacing-lg);
     display: flex;
     flex-direction: column;
     color: var(--text-primary);
@@ -41,7 +41,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    padding: var(--spacing-xxl) var(--spacing-xxxl);
     border-bottom: var(--border);
 }
 
@@ -56,8 +56,8 @@
     color: var(--text-primary);
     font-size: 24px;
     cursor: pointer;
-    padding: 4px 8px;
-    border-radius: 4px;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--spacing-sm);
 }
 
 .icon-modal-close:hover {
@@ -66,7 +66,7 @@
 
 .icon-modal-body {
     flex: 1;
-    padding: 20px;
+    padding: var(--spacing-xxxl);
     overflow: hidden;
     display: flex;
     flex-direction: column;
@@ -74,16 +74,16 @@
 
 .icon-controls {
     display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: var(--spacing-xl);
+    margin-bottom: var(--spacing-xxl);
     flex-wrap: wrap;
 }
 
 .icon-controls input,
 .icon-controls select {
-    padding: 8px 12px;
+    padding: var(--spacing-lg) var(--spacing-xl);
     border: var(--button-border);
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
     background: var(--button-color);
     color: var(--text-primary);
     font-size: 14px;
@@ -101,7 +101,7 @@
 .icon-stats {
     font-size: 12px;
     color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 8px;
+    margin-bottom: var(--spacing-lg);
 }
 
 /* Grid layout - 64px icons with generous spacing and proper text space */
@@ -121,9 +121,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 12px 8px 20px 8px; /* Much more bottom padding */
+    padding: var(--spacing-xl) var(--spacing-lg) var(--spacing-xxxl) var(--spacing-lg);
     border: var(--button-border);
-    border-radius: 6px;
+    border-radius: var(--spacing-md);
     background: var(--button-color);
     cursor: pointer;
     transition: var(--transition);
@@ -150,9 +150,9 @@
 .icon-item img {
     width: 64px;
     height: 64px;
-    border-radius: 4px;
+    border-radius: var(--spacing-sm);
     object-fit: contain;
-    margin-bottom: 8px; /* Increased from 4px */
+    margin-bottom: var(--spacing-lg);
 }
 
 /* Icon name - fully visible with no obstruction */
@@ -169,7 +169,7 @@
     font-weight: 500;
     text-align: center;
     height: 36px; /* Increased from 32px */
-    margin-top: 8px;
+    margin-top: var(--spacing-lg);
     word-wrap: break-word;
     flex-shrink: 0; /* Prevent text from being compressed */
     display: block; /* Override webkit-box when needed */
@@ -188,7 +188,7 @@
 }
 
 .icon-modal-footer {
-    padding: 16px 20px;
+    padding: var(--spacing-xxl) var(--spacing-xxxl);
     border-top: var(--border);
     display: flex;
     justify-content: space-between;
@@ -198,27 +198,27 @@
 .selected-icon-preview {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-lg);
     font-size: 12px;
     color: rgba(255, 255, 255, 0.7);
 }
 
 .selected-icon-preview img {
-    width: 24px;
-    height: 24px;
-    border-radius: 3px;
+    width: var(--icon-size-start-menu);
+    height: var(--icon-size-start-menu);
+    border-radius: var(--spacing-xs);
 }
 
 .icon-actions {
     display: flex;
-    gap: 12px;
+    gap: var(--spacing-xl);
 }
 
 /* Icon URL input group - keep button beside input */
 .icon-url-group {
     display: flex;
     align-items: flex-end;
-    gap: 8px;
+    gap: var(--spacing-lg);
     width: 100%;
 }
 
@@ -237,7 +237,7 @@
 .browse-icons-btn {
     margin-top: 0 !important; /* Remove top margin */
     margin-bottom: 0 !important;
-    padding: 8px 12px !important; /* Match input height */
+    padding: var(--spacing-lg) var(--spacing-xl) !important;
     font-size: 12px !important;
     white-space: nowrap; /* Prevent text wrapping */
     flex-shrink: 0; /* Don't shrink */
@@ -268,32 +268,32 @@
     .icon-grid {
         grid-template-columns: repeat(auto-fill, 90px);
         grid-auto-rows: 110px;
-        gap: 16px;
-        padding: 16px;
+        gap: var(--spacing-xxl);
+        padding: var(--spacing-xxl);
     }
     
     .icon-item {
         width: 90px;
         height: 110px;
-        padding: 8px 6px 12px 6px;
+        padding: var(--spacing-lg) var(--spacing-md) var(--spacing-xl) var(--spacing-md);
     }
     
     .icon-item img {
         width: 56px;
         height: 56px;
-        margin-bottom: 6px;
+        margin-bottom: var(--spacing-md);
     }
     
     .icon-item span {
         font-size: 11px;
         max-width: 86px;
         height: 30px;
-        margin-top: 6px;
+        margin-top: var(--spacing-md);
     }
     
     .icon-modal-footer {
         flex-direction: column;
-        gap: 12px;
+        gap: var(--spacing-xl);
     }
     
     /* Stack input and button on mobile */
@@ -303,6 +303,6 @@
     }
     
     .browse-icons-btn {
-        margin-top: 8px !important;
+        margin-top: var(--spacing-lg) !important;
     }
 }
